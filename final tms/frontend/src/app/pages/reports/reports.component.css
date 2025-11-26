@@ -1,0 +1,58 @@
+.card {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+  font-weight: 600;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.badge {
+  font-size: 0.875rem;
+  padding: 0.35em 0.65em;
+}
+
+.progress {
+  background-color: #e9ecef;
+}
+
+.progress-bar {
+  transition: width 0.6s ease;
+}
+
+.card-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #495057;
+}
+
+.card-subtitle {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table tfoot {
+  font-weight: 600;
+}
+
+.table-info {
+  background-color: #d1ecf1 !important;
+}
+
+.table-responsive {
+  border-radius: 0.375rem;
+}
+
+.card-body h5 {
+  color: #495057;
+  font-weight: 600;
+}
+

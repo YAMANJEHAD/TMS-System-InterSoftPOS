@@ -1,0 +1,39 @@
+<div class="container-fluid">
+  <h2 class="mb-4">Ticket Transfers</h2>
+  
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border" role="status"></div>
+  </div>
+  
+  <div *ngIf="!loading && error" class="alert alert-danger">{{ error }}</div>
+  
+  <div *ngIf="!loading && !error" class="card">
+    <div class="card-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Terminal Number</th>
+            <th>Ticket No</th>
+            <th>From Tech</th>
+            <th>To Tech</th>
+            <th>Status</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let transfer of transfers">
+            <td>{{ transfer.id }}</td>
+            <td>{{ transfer.terminalNumber }}</td>
+            <td>{{ transfer.ticketNo }}</td>
+            <td>{{ transfer.fromTech }}</td>
+            <td>{{ transfer.toTech }}</td>
+            <td><span class="badge bg-info">{{ transfer.statusName }}</span></td>
+            <td>{{ transfer.createdAt | date:'short' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+

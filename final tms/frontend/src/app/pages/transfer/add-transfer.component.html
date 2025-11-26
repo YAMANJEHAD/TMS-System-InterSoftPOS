@@ -1,0 +1,607 @@
+<div class="container-fluid">
+  <!-- Page Header with Add Buttons -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Transfers</h2>
+    <div class="d-flex gap-2">
+      <button type="button" class="btn btn-primary" (click)="openAddModal()">
+        <i class="bi bi-plus-circle me-2"></i>Add New Transfer
+      </button>
+      <button type="button" class="btn btn-success" (click)="openBatchModal()">
+        <i class="bi bi-plus-square me-2"></i>Add Batch Transfer
+      </button>
+    </div>
+  </div>
+  
+  <!-- Success Message (Global) -->
+  <div *ngIf="successMessage && !showAddModal" class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ successMessage }}
+    <button type="button" class="btn-close" (click)="successMessage = null"></button>
+  </div>
+
+  <!-- Filters -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title mb-3">
+        <i class="bi bi-funnel me-2"></i>Filters
+      </h5>
+      <div class="row g-3">
+        <div class="col-lg-3 col-md-6">
+          <label class="form-label">From Date</label>
+          <input type="date" class="form-control" [(ngModel)]="fromDate" (change)="loadTransfers()">
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <label class="form-label">To Date</label>
+          <input type="date" class="form-control" [(ngModel)]="toDate" (change)="loadTransfers()">
+        </div>
+        <div class="col-lg-2 col-md-6">
+          <label class="form-label">Ticket No</label>
+          <input type="number" class="form-control" [(ngModel)]="ticketNo" (change)="loadTransfers()" placeholder="Ticket No">
+        </div>
+        <div class="col-lg-2 col-md-6">
+          <label class="form-label">Terminal Number</label>
+          <input type="number" class="form-control" [(ngModel)]="terminalNumber" (change)="loadTransfers()" placeholder="Terminal No">
+        </div>
+        <div class="col-lg-2 col-md-6">
+          <label class="form-label">Duplicate Count</label>
+          <input type="number" class="form-control" [(ngModel)]="duplicateCount" (change)="loadTransfers()" placeholder="Count">
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12">
+          <button type="button" class="btn btn-outline-secondary" (click)="clearFilters()">
+            <i class="bi bi-x-circle me-2"></i>Clear Filters
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transfer List -->
+  <div class="card shadow-sm">
+    <div class="card-header">
+      <h5 class="mb-0">
+        <i class="bi bi-list-ul me-2"></i>All Transfers
+      </h5>
+    </div>
+    <div class="card-body">
+      <!-- Loading State -->
+      <div *ngIf="loadingTransfers" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2 text-muted">Loading transfers...</p>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="!loadingTransfers && transferError" class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle me-2"></i>{{ transferError }}
+      </div>
+
+      <!-- Table -->
+      <div *ngIf="!loadingTransfers && !transferError" class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th (click)="sort('terminalNumber')" style="cursor: pointer;">
+                Terminal Number
+                <i *ngIf="sortColumn === 'terminalNumber'" 
+                   class="bi" 
+                   [class.bi-arrow-up]="sortDirection === 'asc'"
+                   [class.bi-arrow-down]="sortDirection === 'desc'"></i>
+              </th>
+              <th (click)="sort('ticketNo')" style="cursor: pointer;">
+                Ticket No
+                <i *ngIf="sortColumn === 'ticketNo'" 
+                   class="bi" 
+                   [class.bi-arrow-up]="sortDirection === 'asc'"
+                   [class.bi-arrow-down]="sortDirection === 'desc'"></i>
+              </th>
+              <th (click)="sort('fromTech')" style="cursor: pointer;">
+                From Tech
+                <i *ngIf="sortColumn === 'fromTech'" 
+                   class="bi" 
+                   [class.bi-arrow-up]="sortDirection === 'asc'"
+                   [class.bi-arrow-down]="sortDirection === 'desc'"></i>
+              </th>
+              <th (click)="sort('toTech')" style="cursor: pointer;">
+                To Tech
+                <i *ngIf="sortColumn === 'toTech'" 
+                   class="bi" 
+                   [class.bi-arrow-up]="sortDirection === 'asc'"
+                   [class.bi-arrow-down]="sortDirection === 'desc'"></i>
+              </th>
+              <th (click)="sort('statusName')" style="cursor: pointer;">
+                Status
+                <i *ngIf="sortColumn === 'statusName'" 
+                   class="bi" 
+                   [class.bi-arrow-up]="sortDirection === 'asc'"
+                   [class.bi-arrow-down]="sortDirection === 'desc'"></i>
+              </th>
+              <th (click)="sort('createdAt')" style="cursor: pointer;">
+                Created At
+                <i *ngIf="sortColumn === 'createdAt'" 
+                   class="bi" 
+                   [class.bi-arrow-up]="sortDirection === 'asc'"
+                   [class.bi-arrow-down]="sortDirection === 'desc'"></i>
+              </th>
+              <th (click)="sort('userName')" style="cursor: pointer;">
+                User Name
+                <i *ngIf="sortColumn === 'userName'" 
+                   class="bi" 
+                   [class.bi-arrow-up]="sortDirection === 'asc'"
+                   [class.bi-arrow-down]="sortDirection === 'desc'"></i>
+              </th>
+              <th (click)="sort('duplicateCount')" style="cursor: pointer;">
+                Duplicate Count
+                <i *ngIf="sortColumn === 'duplicateCount'" 
+                   class="bi" 
+                   [class.bi-arrow-up]="sortDirection === 'asc'"
+                   [class.bi-arrow-down]="sortDirection === 'desc'"></i>
+              </th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let transfer of paginatedTransfers">
+              <td>{{ transfer.terminalNumber }}</td>
+              <td>{{ transfer.ticketNo }}</td>
+              <td>{{ transfer.fromTech }}</td>
+              <td>{{ transfer.toTech }}</td>
+              <td>
+                <span class="badge" [ngClass]="{
+                  'bg-success': transfer.statusName === 'Approved',
+                  'bg-warning': transfer.statusName === 'Pending',
+                  'bg-danger': transfer.statusName === 'Rejected',
+                  'bg-info': transfer.statusName === 'In Progress' || !transfer.statusName
+                }">
+                  {{ transfer.statusName }}
+                </span>
+              </td>
+              <td>{{ formatDate(transfer.createdAt) }}</td>
+              <td>{{ transfer.userName }}</td>
+              <td>
+                <span class="badge bg-secondary">{{ transfer.duplicateCount || 0 }}</span>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-info me-1" (click)="openEditModal(transfer)" title="Edit">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-success me-1" (click)="approveTransfer(transfer)" [disabled]="updatingStatus || transfer.statusName === 'Approved'" title="Approve">
+                  <i class="bi bi-check-circle"></i>
+                </button>
+                <button class="btn btn-sm btn-warning me-1" (click)="openRejectModal(transfer)" [disabled]="updatingStatus || transfer.statusName === 'Rejected'" title="Reject">
+                  <i class="bi bi-x-circle"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="openDeleteModal(transfer)" title="Delete">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="paginatedTransfers.length === 0">
+              <td colspan="9" class="text-center text-muted py-4">
+                <i class="bi bi-inbox me-2"></i>No transfers found
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="!loadingTransfers && !transferError && filteredTransfers.length > 0" class="mt-4">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="text-muted small">
+            Showing <strong>{{ getStartIndex() }}</strong> to 
+            <strong>{{ getEndIndex() }}</strong> of 
+            <strong>{{ filteredTransfers.length }}</strong> transfers
+          </div>
+          <nav *ngIf="totalPages > 1">
+            <ul class="pagination pagination-sm mb-0">
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" (click)="previousPage()" [style.cursor]="currentPage === 1 ? 'not-allowed' : 'pointer'">
+                  <i class="bi bi-chevron-left"></i> Previous
+                </a>
+              </li>
+              <li class="page-item" *ngFor="let page of getPageNumbers()" 
+                  [class.active]="page === currentPage && typeof page === 'number'"
+                  [class.disabled]="page === '...'">
+                <a *ngIf="page !== '...'" class="page-link" (click)="handlePageClick(page)" style="cursor: pointer;">
+                  {{ page }}
+                </a>
+                <span *ngIf="page === '...'" class="page-link">...</span>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link" (click)="nextPage()" [style.cursor]="currentPage === totalPages ? 'not-allowed' : 'pointer'">
+                  Next <i class="bi bi-chevron-right"></i>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Transfer Modal -->
+<div class="modal fade" [class.show]="showEditModal" [style.display]="showEditModal ? 'block' : 'none'" tabindex="-1" *ngIf="showEditModal">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-pencil me-2"></i>Edit Transfer
+        </h5>
+        <button type="button" class="btn-close" (click)="closeEditModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Terminal Number <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="editFormData.terminalNumber" name="editTerminalNumber" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Ticket No <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="editFormData.ticketNo" name="editTicketNo" required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">From Technician <span class="text-danger">*</span></label>
+              <select class="form-select" [(ngModel)]="editFormData.fromTechId" name="editFromTechId" required [disabled]="loadingFilters">
+                <option [value]="0">Select From Technician</option>
+                <option *ngFor="let tech of technicians" [value]="tech.techId">
+                  {{ tech.techName }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">To Technician <span class="text-danger">*</span></label>
+              <select class="form-select" [(ngModel)]="editFormData.toTechId" name="editToTechId" required [disabled]="loadingFilters">
+                <option [value]="0">Select To Technician</option>
+                <option *ngFor="let tech of technicians" [value]="tech.techId">
+                  {{ tech.techName }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="row" *ngIf="isAdmin">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Reject Reason</label>
+              <input type="text" class="form-control" [(ngModel)]="editFormData.rejectReason" name="editRejectReason" [disabled]="editFormData.statusId === 1 || editFormData.statusId === 2">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Status <span class="text-danger">*</span></label>
+              <div class="mt-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="editStatus" id="editStatusPending" [value]="1" [(ngModel)]="editFormData.statusId" (change)="onStatusChange()" [disabled]="loadingFilters">
+                  <label class="form-check-label" for="editStatusPending">
+                    Pending
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="editStatus" id="editStatusApproved" [value]="2" [(ngModel)]="editFormData.statusId" (change)="onStatusChange()" [disabled]="loadingFilters">
+                  <label class="form-check-label" for="editStatusApproved">
+                    Approved
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="editStatus" id="editStatusRejected" [value]="3" [(ngModel)]="editFormData.statusId" (change)="onStatusChange()" [disabled]="loadingFilters">
+                  <label class="form-check-label" for="editStatusRejected">
+                    Rejected
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeEditModal()" [disabled]="editing">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-primary" (click)="onUpdate()" [disabled]="editing || loadingFilters">
+          <span *ngIf="editing" class="spinner-border spinner-border-sm me-2"></span>
+          <i *ngIf="!editing" class="bi bi-check-circle me-2"></i>
+          {{ editing ? 'Updating...' : 'Update Transfer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show" *ngIf="showEditModal" (click)="closeEditModal()"></div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" [class.show]="showDeleteModal" [style.display]="showDeleteModal ? 'block' : 'none'" tabindex="-1" *ngIf="showDeleteModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-exclamation-triangle me-2"></i>Delete Transfer
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeDeleteModal()"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this transfer?</p>
+        <div class="alert alert-warning mb-0">
+          <strong>Terminal Number:</strong> {{ deletingTransfer?.terminalNumber }}<br>
+          <strong>Ticket No:</strong> {{ deletingTransfer?.ticketNo }}<br>
+          <strong>From Tech:</strong> {{ deletingTransfer?.fromTech }}<br>
+          <strong>To Tech:</strong> {{ deletingTransfer?.toTech }}
+        </div>
+        <p class="text-danger mt-3 mb-0"><strong>This action cannot be undone.</strong></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()" [disabled]="deleting">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-danger" (click)="onDelete()" [disabled]="deleting">
+          <span *ngIf="deleting" class="spinner-border spinner-border-sm me-2"></span>
+          <i *ngIf="!deleting" class="bi bi-trash me-2"></i>
+          {{ deleting ? 'Deleting...' : 'Delete Transfer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show" *ngIf="showDeleteModal" (click)="closeDeleteModal()"></div>
+
+<!-- Add Transfer Modal -->
+<div class="modal fade" [class.show]="showAddModal" [style.display]="showAddModal ? 'block' : 'none'" tabindex="-1" *ngIf="showAddModal">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-plus-circle me-2"></i>Add New Transfer
+        </h5>
+        <button type="button" class="btn-close" (click)="closeAddModal()"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Success Message (Inside Modal) -->
+        <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+          {{ successMessage }}
+          <button type="button" class="btn-close" (click)="successMessage = null"></button>
+        </div>
+
+        <!-- Error Message (Inside Modal) -->
+        <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ error }}
+          <button type="button" class="btn-close" (click)="error = null"></button>
+        </div>
+
+        <form (ngSubmit)="onSubmit()">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Terminal Number <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="formData.terminalNumber" name="modalTerminalNumber" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Ticket No <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="formData.ticketNo" name="modalTicketNo" required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">From Technician <span class="text-danger">*</span></label>
+              <select class="form-select" [(ngModel)]="formData.fromTechId" name="modalFromTechId" required [disabled]="loadingFilters">
+                <option [value]="0">Select From Technician</option>
+                <option *ngFor="let tech of technicians" [value]="tech.techId">
+                  {{ tech.techName }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">To Technician <span class="text-danger">*</span></label>
+              <select class="form-select" [(ngModel)]="formData.toTechId" name="modalToTechId" required [disabled]="loadingFilters">
+                <option [value]="0">Select To Technician</option>
+                <option *ngFor="let tech of technicians" [value]="tech.techId">
+                  {{ tech.techName }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="row" *ngIf="isAdmin">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Reject Reason</label>
+              <input type="text" class="form-control" [(ngModel)]="formData.rejectReason" name="modalRejectReason" [disabled]="formData.statusId === 1 || formData.statusId === 2">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Status <span class="text-danger">*</span></label>
+              <div class="mt-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="addStatus" id="addStatusPending" [value]="1" [(ngModel)]="formData.statusId" (change)="onAddStatusChange()" [checked]="formData.statusId === 1 || formData.statusId === 0">
+                  <label class="form-check-label" for="addStatusPending">
+                    Pending
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="addStatus" id="addStatusApproved" [value]="2" [(ngModel)]="formData.statusId" (change)="onAddStatusChange()">
+                  <label class="form-check-label" for="addStatusApproved">
+                    Approved
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="addStatus" id="addStatusRejected" [value]="3" [(ngModel)]="formData.statusId" (change)="onAddStatusChange()">
+                  <label class="form-check-label" for="addStatusRejected">
+                    Rejected
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="alert alert-info mb-0" *ngIf="!isAdmin">
+            <i class="bi bi-info-circle me-2"></i>Status will be set to <strong>Pending</strong> by default.
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeAddModal()" [disabled]="loading">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="loading || loadingFilters">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+          <i *ngIf="!loading" class="bi bi-check-circle me-2"></i>
+          {{ loading ? 'Adding...' : 'Save' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show" *ngIf="showAddModal" (click)="closeAddModal()"></div>
+
+<!-- Batch Transfer Modal -->
+<div class="modal fade" [class.show]="showBatchModal" [style.display]="showBatchModal ? 'block' : 'none'" tabindex="-1" *ngIf="showBatchModal">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-plus-square me-2"></i>Add Batch Transfer
+        </h5>
+        <button type="button" class="btn-close" (click)="closeBatchModal()"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Success Message (Inside Modal) -->
+        <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+          {{ successMessage }}
+          <button type="button" class="btn-close" (click)="successMessage = null"></button>
+        </div>
+
+        <!-- Error Message (Inside Modal) -->
+        <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ error }}
+          <button type="button" class="btn-close" (click)="error = null"></button>
+        </div>
+
+        <!-- Technician Selection -->
+        <div class="row mb-4">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">From Technician <span class="text-danger">*</span></label>
+            <select class="form-select" [(ngModel)]="formData.fromTechId" name="batchFromTechId" required [disabled]="loadingFilters">
+              <option [value]="0">Select From Technician</option>
+              <option *ngFor="let tech of technicians" [value]="tech.techId">
+                {{ tech.techName }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">To Technician <span class="text-danger">*</span></label>
+            <select class="form-select" [(ngModel)]="formData.toTechId" name="batchToTechId" required [disabled]="loadingFilters">
+              <option [value]="0">Select To Technician</option>
+              <option *ngFor="let tech of technicians" [value]="tech.techId">
+                {{ tech.techName }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Batch Transfer Textareas -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">
+              Terminal Numbers <span class="text-danger">*</span>
+              <small class="text-muted d-block">(One per line)</small>
+            </label>
+            <textarea 
+              class="form-control" 
+              rows="10" 
+              [(ngModel)]="batchTerminalNumbers" 
+              name="batchTerminalNumbers"
+              placeholder="TERM001&#10;TERM002&#10;TERM003&#10;TERM004&#10;TERM005"
+              required
+              style="font-family: monospace; font-size: 0.9rem;"></textarea>
+            <small class="form-text text-muted">
+              Enter terminal numbers, one per line. Example: TERM001, TERM002, etc.
+            </small>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">
+              Ticket Numbers <span class="text-danger">*</span>
+              <small class="text-muted d-block">(One per line)</small>
+            </label>
+            <textarea 
+              class="form-control" 
+              rows="10" 
+              [(ngModel)]="batchTicketNumbers" 
+              name="batchTicketNumbers"
+              placeholder="TKT001&#10;TKT002&#10;TKT003&#10;TKT004&#10;TKT005"
+              required
+              style="font-family: monospace; font-size: 0.9rem;"></textarea>
+            <small class="form-text text-muted">
+              Enter ticket numbers, one per line. Example: TKT001, TKT002, etc.
+            </small>
+          </div>
+        </div>
+
+        <!-- Info Message -->
+        <div class="alert alert-info mb-0">
+          <i class="bi bi-info-circle me-2"></i>
+          <strong>Instructions:</strong> Enter terminal numbers and ticket numbers, one per line. 
+          The first terminal number will be matched with the first ticket number, second with second, and so on. 
+          Both lists must have the same number of entries. All transfers will be created with <strong>Pending</strong> status.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeBatchModal()" [disabled]="addingBatch">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-success" (click)="onSubmitBatch()" [disabled]="addingBatch || loadingFilters || !formData.fromTechId || !formData.toTechId">
+          <span *ngIf="addingBatch" class="spinner-border spinner-border-sm me-2"></span>
+          <i *ngIf="!addingBatch" class="bi bi-check-circle me-2"></i>
+          {{ addingBatch ? 'Submitting...' : 'Submit Batch' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show" *ngIf="showBatchModal" (click)="closeBatchModal()"></div>
+
+<!-- Reject Transfer Modal -->
+<div class="modal fade" [class.show]="showRejectModal" [style.display]="showRejectModal ? 'block' : 'none'" tabindex="-1" *ngIf="showRejectModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h5 class="modal-title">
+          <i class="bi bi-exclamation-triangle me-2"></i>Reject Transfer
+        </h5>
+        <button type="button" class="btn-close" (click)="closeRejectModal()"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to reject this transfer?</p>
+        <div class="alert alert-info mb-3">
+          <strong>Terminal Number:</strong> {{ rejectingTransfer?.terminalNumber }}<br>
+          <strong>Ticket No:</strong> {{ rejectingTransfer?.ticketNo }}<br>
+          <strong>From Tech:</strong> {{ rejectingTransfer?.fromTech }}<br>
+          <strong>To Tech:</strong> {{ rejectingTransfer?.toTech }}
+        </div>
+        
+        <!-- Error Message -->
+        <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ error }}
+          <button type="button" class="btn-close" (click)="error = null"></button>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Reject Reason <span class="text-danger">*</span></label>
+          <textarea 
+            class="form-control" 
+            rows="3" 
+            [(ngModel)]="rejectReasonText" 
+            name="rejectReasonText"
+            placeholder="Enter reject reason..."
+            required></textarea>
+          <small class="form-text text-muted">Please provide a reason for rejecting this transfer.</small>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeRejectModal()" [disabled]="updatingStatus">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-warning" (click)="rejectTransfer()" [disabled]="updatingStatus || !rejectReasonText.trim()">
+          <span *ngIf="updatingStatus" class="spinner-border spinner-border-sm me-2"></span>
+          <i *ngIf="!updatingStatus" class="bi bi-x-circle me-2"></i>
+          {{ updatingStatus ? 'Rejecting...' : 'Reject Transfer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show" *ngIf="showRejectModal" (click)="closeRejectModal()"></div>

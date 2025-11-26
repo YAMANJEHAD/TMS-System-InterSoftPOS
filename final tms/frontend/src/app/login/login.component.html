@@ -1,0 +1,47 @@
+<div class="d-flex flex-column justify-content-center align-items-center vh-100">
+  <!-- Company Name and System Name -->
+  <div class="text-center mb-4">
+    <h1 class="display-5 fw-bold mb-2">INTERSOFT</h1>
+    <h2 class="h4 text-muted mb-0">TMS</h2>
+    <p class="text-muted small mt-2">Task Management System</p>
+  </div>
+
+  <div class="card p-4 shadow-sm" style="width: 22rem;">
+    <h3 class="card-title text-center mb-4">Login</h3>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input id="email" type="email" class="form-control" formControlName="email" />
+        <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid" class="text-danger small">
+          <div *ngIf="form.get('email')?.errors?.['required']">Email is required</div>
+          <div *ngIf="form.get('email')?.errors?.['email']">Invalid email format</div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input id="password" type="password" class="form-control" formControlName="password" />
+        <div *ngIf="form.get('password')?.touched && form.get('password')?.invalid" class="text-danger small">
+          <div *ngIf="form.get('password')?.errors?.['required']">Password is required</div>
+        </div>
+      </div>
+      <div class="form-check mb-3">
+        <input id="remember" type="checkbox" class="form-check-input" formControlName="remember" />
+        <label for="remember" class="form-check-label">Remember me</label>
+      </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary" [disabled]="loading">
+          <span *ngIf="!loading">Login</span>
+          <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+        </button>
+      </div>
+      <div *ngIf="error" class="alert alert-danger mt-3">
+        {{ error }}
+      </div>
+    </form>
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-5 text-center text-muted small">
+    <p class="mb-0">© 2025 INTERSOFT TMS. All rights reserved.</p>
+  </footer>
+</div>

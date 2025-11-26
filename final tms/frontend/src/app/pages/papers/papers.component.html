@@ -1,0 +1,187 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Paper Cancelled</h2>
+    <button class="btn btn-primary" (click)="openCreateModal()">
+      <i class="bi bi-plus-circle me-2"></i>Create New Paper
+    </button>
+  </div>
+
+  <!-- Success Message -->
+  <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ successMessage }}
+    <button type="button" class="btn-close" (click)="dismissSuccess()"></button>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ error }}
+    <button type="button" class="btn-close" (click)="dismissError()"></button>
+  </div>
+
+  <!-- Filters -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title mb-3">Filters</h5>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">From Date</label>
+          <input type="date" class="form-control" [(ngModel)]="filters.fromDate" name="fromDate">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">To Date</label>
+          <input type="date" class="form-control" [(ngModel)]="filters.toDate" name="toDate">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Entry User</label>
+          <select class="form-select" [(ngModel)]="filters.entryUser" name="entryUser" [disabled]="loadingFilters">
+            <option [value]="undefined">All Users</option>
+            <option *ngFor="let user of users" [value]="user.userId">
+              {{ user.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="mt-3">
+        <button class="btn btn-primary me-2" (click)="applyFilters()">
+          <i class="bi bi-funnel me-2"></i>Apply Filters
+        </button>
+        <button class="btn btn-outline-secondary" (click)="clearFilters()">
+          <i class="bi bi-x-circle me-2"></i>Clear Filters
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Papers Table -->
+  <div *ngIf="!loading && !error" class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Cancelled Terminal No</th>
+              <th>Delivered Terminal No</th>
+              <th>Cancelled Ticket No</th>
+              <th>Delivered Ticket No</th>
+              <th>Entry User</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let paper of papers">
+              <td>{{ paper.cancelledTerminalNo }}</td>
+              <td>{{ paper.deliveredTerminalNo }}</td>
+              <td>{{ paper.cancelledTicketNo }}</td>
+              <td>{{ paper.deliveredTicketNo }}</td>
+              <td>{{ paper.entryUser || 'N/A' }}</td>
+              <td>
+                <button class="btn btn-sm btn-info me-2" (click)="openEditModal(paper)" title="Edit">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="deletePaper(paper)" title="Delete">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="papers.length === 0">
+              <td colspan="6" class="text-center text-muted">No papers found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Create Paper Modal -->
+<div class="modal fade" [class.show]="showCreateModal" [style.display]="showCreateModal ? 'block' : 'none'" tabindex="-1" *ngIf="showCreateModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create New Paper</h5>
+        <button type="button" class="btn-close" (click)="closeCreateModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="createPaper()">
+          <div class="mb-3">
+            <label class="form-label">Cancelled Terminal No <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="newPaper.cancelledTerminalNo" name="cancelledTerminalNo" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Delivered Terminal No <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="newPaper.deliveredTerminalNo" name="deliveredTerminalNo" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Cancelled Ticket No <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="newPaper.cancelledTicketNo" name="cancelledTicketNo" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Delivered Ticket No <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="newPaper.deliveredTicketNo" name="deliveredTicketNo" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeCreateModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="createPaper()" [disabled]="creatingPaper">
+          <span *ngIf="creatingPaper" class="spinner-border spinner-border-sm me-2"></span>
+          {{ creatingPaper ? 'Creating...' : 'Create Paper' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show" *ngIf="showCreateModal" (click)="closeCreateModal()"></div>
+
+<!-- Edit Paper Modal -->
+<div class="modal fade" [class.show]="showEditModal" [style.display]="showEditModal ? 'block' : 'none'" tabindex="-1" *ngIf="showEditModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-pencil me-2"></i>Edit Paper
+        </h5>
+        <button type="button" class="btn-close" (click)="closeEditModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label class="form-label">Cancelled Terminal No <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="editPaper.cancelledTerminalNo" name="editCancelledTerminalNo" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Delivered Terminal No <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="editPaper.deliveredTerminalNo" name="editDeliveredTerminalNo" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Cancelled Ticket No <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="editPaper.cancelledTicketNo" name="editCancelledTicketNo" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Delivered Ticket No <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="editPaper.deliveredTicketNo" name="editDeliveredTicketNo" required>
+          </div>
+          <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeEditModal()" [disabled]="updatingPaper">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-primary" (click)="updatePaper()" [disabled]="updatingPaper">
+          <span *ngIf="updatingPaper" class="spinner-border spinner-border-sm me-2"></span>
+          <i *ngIf="!updatingPaper" class="bi bi-check-circle me-2"></i>
+          {{ updatingPaper ? 'Updating...' : 'Update Paper' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show" *ngIf="showEditModal" (click)="closeEditModal()"></div>

@@ -1,0 +1,20 @@
+{
+  "Version": 1,
+  "Hash": "pgotWCz8SCsNt/5tMayT3gdb33GH+Qwb1rh7XvWbKGg=",
+  "Source": "backend",
+  "BasePath": "_content/backend",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "backend\\wwwroot",
+      "Source": "backend",
+      "ContentRoot": "C:\\Users\\user\\OneDrive\\Desktop\\final tms\\backend\\wwwroot\\",
+      "BasePath": "_content/backend",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [],
+  "Endpoints": []
+}
