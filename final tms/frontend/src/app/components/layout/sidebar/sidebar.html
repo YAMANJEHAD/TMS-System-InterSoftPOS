@@ -1,0 +1,105 @@
+<div class="sidebar" [class.collapsed]="isCollapsed">
+  <div class="sidebar-header">
+    <div class="logo-section" *ngIf="!isCollapsed">
+      <img src="/Images/logo.jpg" alt="INTERSOFT Logo" class="logo-img" />
+      <div class="company-text">
+        <div class="brand-name">INTERSOFT TMS</div>
+        <div class="company-subtitle">International Software Co.</div>
+      </div>
+    </div>
+    <img src="/Images/logo.jpg" alt="INTERSOFT Logo" class="logo-img" *ngIf="isCollapsed" />
+  </div>
+
+  <div class="welcome-section" *ngIf="!isCollapsed">
+    <p class="welcome-text">Welcome back, <span class="user-name">{{ userName }}</span></p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a routerLink="/dashboard" routerLinkActive="active" *ngIf="hasPermission('GetDashboardStats')">
+      <span class="material-icons icon">dashboard</span>
+      <span class="text" *ngIf="!isCollapsed">Dashboard</span>
+    </a>
+    
+    <a routerLink="/all-tasks" routerLinkActive="active" *ngIf="hasPermission('GetTasks')">
+      <span class="material-icons icon">assignment</span>
+      <span class="text" *ngIf="!isCollapsed">All Tasks</span>
+    </a>
+    
+    <a routerLink="/my-tasks" routerLinkActive="active" *ngIf="hasPermission('GetTasks')">
+      <span class="material-icons icon">check_circle</span>
+      <span class="text" *ngIf="!isCollapsed">My Tasks</span>
+    </a>
+    
+    <!-- Transfer Group -->
+    <div class="nav-group" *ngIf="hasPermission('GetTransferTickets')">
+      <a 
+        class="nav-parent" 
+        [class.expanded]="isGroupExpanded('transfer')"
+        [class.active]="isAnyTransferPageActive()"
+        (click)="toggleGroup('transfer', $event)"
+        href="javascript:void(0)">
+        <span class="material-icons icon">swap_horiz</span>
+        <span class="text" *ngIf="!isCollapsed">Transfer</span>
+        <span class="material-icons expand-icon" *ngIf="!isCollapsed">
+          {{ isGroupExpanded('transfer') ? 'expand_less' : 'expand_more' }}
+        </span>
+      </a>
+      <div class="sub-menu" [class.expanded]="isGroupExpanded('transfer')" [class.floating]="isCollapsed && isGroupExpanded('transfer')">
+        <a routerLink="/transfer" routerLinkActive="active" class="sub-item" (click)="isCollapsed && closeGroup('transfer')">
+          <span class="material-icons icon">add_circle_outline</span>
+          <span class="text">Add Transfer</span>
+        </a>
+        <a routerLink="/transfer-reports" routerLinkActive="active" class="sub-item" (click)="isCollapsed && closeGroup('transfer')">
+          <span class="material-icons icon">assessment</span>
+          <span class="text">Transfer Report</span>
+        </a>
+      </div>
+    </div>
+    
+    <!-- Inventory Group -->
+    <div class="nav-group" *ngIf="hasPermission('GetByStatus')">
+      <a 
+        class="nav-parent" 
+        [class.expanded]="isGroupExpanded('inventory')"
+        [class.active]="isAnyInventoryPageActive()"
+        (click)="toggleGroup('inventory', $event)"
+        href="javascript:void(0)">
+        <span class="material-icons icon">inventory_2</span>
+        <span class="text" *ngIf="!isCollapsed">Inventory</span>
+        <span class="material-icons expand-icon" *ngIf="!isCollapsed">
+          {{ isGroupExpanded('inventory') ? 'expand_less' : 'expand_more' }}
+        </span>
+      </a>
+      <div class="sub-menu" [class.expanded]="isGroupExpanded('inventory')" [class.floating]="isCollapsed && isGroupExpanded('inventory')">
+        <a routerLink="/inventory" routerLinkActive="active" class="sub-item" (click)="isCollapsed && closeGroup('inventory')">
+          <span class="material-icons icon">add_circle_outline</span>
+          <span class="text">Add Inventory</span>
+        </a>
+        <a routerLink="/inventory-report" routerLinkActive="active" class="sub-item" (click)="isCollapsed && closeGroup('inventory')">
+          <span class="material-icons icon">assessment</span>
+          <span class="text">Inventory Report</span>
+        </a>
+      </div>
+    </div>
+    
+    <a routerLink="/paper-requests" routerLinkActive="active" *ngIf="hasPermission('GetPapers')">
+      <span class="material-icons icon">description</span>
+      <span class="text" *ngIf="!isCollapsed">Paper Requests</span>
+    </a>
+    
+    <a routerLink="/job-orders" routerLinkActive="active" *ngIf="hasPermission('GetJobOrders')">
+      <span class="material-icons icon">work</span>
+      <span class="text" *ngIf="!isCollapsed">Job Orders</span>
+    </a>
+    
+    <a routerLink="/reports" routerLinkActive="active" *ngIf="hasPermission('GetReports')">
+      <span class="material-icons icon">bar_chart</span>
+      <span class="text" *ngIf="!isCollapsed">Reports</span>
+    </a>
+    
+    <a routerLink="/users-management" routerLinkActive="active" *ngIf="canAccessUserManagement()">
+      <span class="material-icons icon">people</span>
+      <span class="text" *ngIf="!isCollapsed">Users Management</span>
+    </a>
+  </nav>
+</div>

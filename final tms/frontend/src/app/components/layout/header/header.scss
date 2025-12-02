@@ -1,0 +1,362 @@
+.header {
+  height: 70px;
+  background: var(--bg-primary);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  position: fixed;
+  top: 0;
+  left: 280px;
+  right: 0;
+  z-index: 999;
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color var(--transition-slow);
+
+  &.sidebar-collapsed {
+    left: 80px;
+  }
+
+  @media (max-width: 768px) {
+    left: 0 !important;
+    padding: 0 15px;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+      .sidebar-toggle-btn {
+      background: transparent;
+      border: 2px solid var(--navy-blue-light);
+      color: var(--navy-blue);
+      cursor: pointer;
+      padding: 8px 10px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 40px;
+      min-height: 40px;
+      box-shadow: var(--shadow-sm);
+
+      .material-icons {
+        font-size: 24px;
+        transition: transform 0.3s ease;
+      }
+
+      &:hover {
+        background: var(--bg-hover);
+        border-color: var(--navy-blue);
+        box-shadow: var(--shadow-md);
+        transform: scale(1.05);
+      }
+
+      &:active {
+        transform: scale(0.95);
+        box-shadow: var(--shadow-sm);
+      }
+    }
+
+    .time-date {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .time {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+
+        .material-icons {
+          font-size: 20px;
+          color: var(--dark-yellow);
+        }
+      }
+
+      .date {
+        font-size: 12px;
+        color: var(--text-secondary);
+        white-space: nowrap;
+      }
+
+      @media (max-width: 1024px) {
+        padding-left: 15px;
+        
+        .time {
+          font-size: 16px;
+        }
+        
+        .date {
+          font-size: 11px;
+        }
+      }
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    .add-task-btn {
+      background: var(--navy-blue);
+      color: var(--text-inverse);
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-weight: 500;
+      transition: background var(--transition-normal);
+
+      &:hover {
+        background: var(--navy-blue-hover);
+      }
+    }
+
+    .notifications-container {
+      position: relative;
+
+      .notification-btn {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        position: relative;
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .material-icons {
+          font-size: 24px;
+          color: var(--navy-blue);
+        }
+
+        .badge {
+          position: absolute;
+          top: 0;
+          right: 0;
+          background: var(--dark-yellow);
+          color: var(--navy-blue);
+          border-radius: 50%;
+          width: 18px;
+          height: 18px;
+          font-size: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+        }
+      }
+
+      .notifications-dropdown {
+        position: absolute;
+        top: 50px;
+        right: 0;
+        width: 350px;
+        background: var(--bg-primary);
+        box-shadow: var(--shadow-lg);
+        border-radius: var(--radius-lg);
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid var(--border-color);
+
+        .dropdown-header {
+          padding: 15px;
+          border-bottom: 1px solid var(--border-color);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          h3 {
+            margin: 0;
+            font-size: 16px;
+            color: var(--text-primary);
+          }
+
+          .clear-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            padding: 5px 10px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--text-secondary);
+            
+            &:hover {
+              background: var(--bg-hover);
+            }
+          }
+        }
+
+        .notifications-list {
+          .notification-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            transition: background var(--transition-normal);
+
+            &:hover {
+              background: var(--bg-hover);
+            }
+
+            &.unread {
+              background: var(--info-blue-light);
+            }
+
+            .notification-content {
+              .message {
+                margin: 0 0 5px 0;
+                font-size: 14px;
+                color: var(--text-primary);
+              }
+
+              .time {
+                font-size: 11px;
+                color: var(--text-secondary);
+              }
+            }
+
+            .notification-actions {
+              display: flex;
+              gap: 10px;
+              margin-top: 10px;
+
+              button {
+                background: transparent;
+                border: 1px solid var(--border-color);
+                padding: 5px 10px;
+                border-radius: var(--radius-sm);
+                cursor: pointer;
+                font-size: 12px;
+                color: var(--text-secondary);
+                
+                &:hover {
+                  background: var(--bg-hover);
+                }
+              }
+            }
+          }
+
+          .no-notifications {
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+          }
+        }
+      }
+    }
+
+    .user-profile {
+      position: relative;
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 6px;
+        transition: background 0.2s;
+
+        &:hover {
+          background: var(--bg-hover);
+        }
+
+        .avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: var(--navy-blue);
+          color: var(--text-inverse);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 600;
+        }
+
+        .user-details {
+          display: flex;
+          flex-direction: column;
+
+          .user-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-primary);
+          }
+
+          .user-role {
+            font-size: 12px;
+            color: var(--text-secondary);
+          }
+        }
+
+        .dropdown-icon {
+          font-size: 18px;
+          color: var(--text-secondary);
+          transition: transform 0.2s;
+        }
+      }
+
+      &:hover .dropdown-icon {
+        transform: rotate(180deg);
+      }
+
+      .user-menu {
+        position: absolute;
+        top: 55px;
+        right: 0;
+        background: var(--bg-primary);
+        box-shadow: var(--shadow-lg);
+        border-radius: var(--radius-lg);
+        min-width: 200px;
+        padding: 10px 0;
+        border: 1px solid var(--border-color);
+
+        .menu-item {
+          padding: 10px 20px;
+          display: block;
+          width: 100%;
+          text-align: left;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          transition: background var(--transition-normal);
+          color: var(--text-primary);
+
+          &:hover {
+            background: var(--bg-hover);
+          }
+
+          &.logout {
+            color: var(--error-red);
+            border-top: 1px solid var(--border-color);
+            margin-top: 5px;
+            padding-top: 15px;
+          }
+
+          .label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 5px;
+          }
+
+          .value {
+            font-size: 14px;
+            color: var(--text-primary);
+          }
+        }
+      }
+    }
+  }
+}
+
+// Modal styles now use global styles from styles.scss
+// Only component-specific overrides here if needed
+

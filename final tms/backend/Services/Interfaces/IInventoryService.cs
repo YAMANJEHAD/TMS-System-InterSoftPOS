@@ -6,7 +6,7 @@ namespace Backend.Services.Interfaces
     public interface IInventoryService
     {
         IEnumerable<InventoryChartItem> GetInventoryChart();
-        IEnumerable<InventoryItemDto> GetInventoryByStatus(int statusId);
+        IEnumerable<InventoryItemDto> GetInventoryByStatus(int statusId, int PageNumber, int PageSize);
         void InsertInventory(InventoryCreateDto dto);
         void UpdateInventory(InventoryUpdateDto dto);
         void UpdateInventoryStatus(int terminalId, int statusId, string rejectReason);

@@ -1,0 +1,132 @@
+<div class="job-orders-container">
+  <app-breadcrumb [items]="[{ label: 'Job Orders' }]"></app-breadcrumb>
+  
+  <div class="page-header">
+    <h1>Job Orders</h1>
+    <button class="primary-button" (click)="openAddModal()">
+      <span class="material-icons">add</span>
+      <span>Create New J.O</span>
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-card card">
+    <h2>Filters</h2>
+    <div class="filters-grid">
+      <div class="form-group">
+        <label>Month</label>
+        <select [(ngModel)]="month">
+          <option [value]="0">All Months</option>
+          <option *ngFor="let monthOption of monthOptions" [value]="monthOption.value">
+            {{ monthOption.name }}
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Year</label>
+        <select [(ngModel)]="year">
+          <option [value]="0">All Years</option>
+          <option *ngFor="let yearOption of yearOptions" [value]="yearOption">
+            {{ yearOption }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="filter-actions">
+      <button class="primary-button" (click)="applyFilters()">
+        <span class="material-icons">filter_list</span>
+        <span>Apply Filters</span>
+      </button>
+      <button class="secondary-button" (click)="resetFilters()">
+        <span class="material-icons">refresh</span>
+        <span>Reset</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Job Orders Table -->
+  <div class="table-container card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+      <h2>All Job Order</h2>
+      <button class="excel-export-button" (click)="exportToExcel()">
+        <span class="material-icons">table_chart</span>
+        <span>Export Excel</span>
+      </button>
+    </div>
+    <div class="loading" *ngIf="isLoading">Loading job orders...</div>
+    
+    <table *ngIf="!isLoading">
+      <thead>
+        <tr>
+          <th>Task ID</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Project</th>
+          <th>Status</th>
+          <th>User</th>
+          <th>Due Date</th>
+          <th>Created At</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of jobOrders">
+          <td>{{ order.taskId }}</td>
+          <td>{{ order.title }}</td>
+          <td>{{ order.description || '-' }}</td>
+          <td>{{ order.projectName }}</td>
+          <td>{{ order.statusName }}</td>
+          <td>
+            <div class="user-cell">
+              <div class="user-avatar" [style.background-color]="getUserAvatarColor(order.userName)">
+                {{ getUserInitials(order.userName) }}
+              </div>
+              <span class="user-name">{{ order.userName }}</span>
+            </div>
+          </td>
+          <td>{{ order.dueDate | date:'shortDate' }}</td>
+          <td>{{ order.createdAt | date:'short' }}</td>
+        </tr>
+        <tr *ngIf="jobOrders.length === 0">
+          <td colspan="8" class="no-data">No job orders found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Add Job Order Modal -->
+  <div class="modal" *ngIf="showAddModal" (click)="closeAddModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Create New Job Order</h2>
+        <button class="close-btn" (click)="closeAddModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Title *</label>
+          <input type="text" [(ngModel)]="formData.title" />
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea [(ngModel)]="formData.description" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Due Date *</label>
+          <input type="date" [(ngModel)]="formData.dueDate" />
+        </div>
+        <div class="form-group">
+          <label>User IDs (comma-separated)</label>
+          <input type="text" [(ngModel)]="formData.ids" placeholder="e.g., 1,2,3" />
+        </div>
+        <div class="form-group">
+          <label>File</label>
+          <input type="file" (change)="onFileSelected($event)" />
+          <span *ngIf="selectedFile">{{ selectedFile.name }}</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-button" (click)="closeAddModal()">Cancel</button>
+        <button class="primary-button" (click)="createJobOrder()">Create</button>
+      </div>
+    </div>
+  </div>
+</div>

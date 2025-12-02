@@ -1,0 +1,40 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg-secondary);
+  transition: background-color var(--transition-slow);
+}
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.with-sidebar {
+    margin-left: 280px;
+    margin-top: 70px;
+    padding: 30px;
+  }
+}
+
+// Adjust main content when sidebar is collapsed
+body.sidebar-collapsed {
+  .main-content.with-sidebar {
+    margin-left: 80px;
+  }
+  
+  .header {
+    left: 80px;
+  }
+}
+

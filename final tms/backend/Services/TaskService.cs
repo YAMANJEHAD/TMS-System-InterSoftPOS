@@ -21,7 +21,7 @@ namespace Backend.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public IEnumerable<TaskSummary> GetAll(DateTime? fromDate, DateTime? toDate, string title, int statusId, int priorityId, int projectId, int userId)
+        public IEnumerable<TaskSummary> GetAll(DateTime? fromDate, DateTime? toDate, string title, int statusId, int priorityId, int projectId, int userId, int PageNumber, int PageSize)
         {
             var list = new List<TaskSummary>();
             using var conn = _dbClient.CreateConnection();
@@ -36,6 +36,8 @@ namespace Backend.Services
             cmd.Parameters.AddWithValue("@priority_id", priorityId);
             cmd.Parameters.AddWithValue("@project_id", projectId);
             cmd.Parameters.AddWithValue("@user_id", userId);
+            cmd.Parameters.AddWithValue("@PageNumber", PageNumber);
+            cmd.Parameters.AddWithValue("@PageSize", PageSize);
             conn.Open();
             using var rdr = cmd.ExecuteReader();
             while (rdr.Read())
@@ -48,7 +50,7 @@ namespace Backend.Services
                     StatusName = rdr["status_name"].ToString(),
                     PriorityName = rdr["priority_name"].ToString(),
                     ProjectName = rdr["project_name"].ToString(),
-                    EntryUser = rdr["EntryUser"].ToString()
+                    AsignTo = rdr["AsignTo"].ToString()
                 });
             }
             return list;

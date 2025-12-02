@@ -12,5 +12,6 @@ namespace Backend.Models
         public string ToTech { get; set; }
         public string StatusName { get; set; }
         public int DuplicateCount { get; set; }
+        
     }
 }

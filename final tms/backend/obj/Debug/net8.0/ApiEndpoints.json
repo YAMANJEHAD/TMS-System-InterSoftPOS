@@ -74,6 +74,32 @@
   },
   {
     "ContainingType": "Backend.Controllers.FiltersController",
+    "Method": "GetInventoryStatus",
+    "RelativePath": "api/Filters/GetInventoryStatus",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend.Controllers.FiltersController",
+    "Method": "GetAllPermissions",
+    "RelativePath": "api/Filters/permissions",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend.Controllers.FiltersController",
     "Method": "GetPriorities",
     "RelativePath": "api/Filters/priorities",
     "HttpMethod": "GET",
@@ -244,6 +270,16 @@
         "Name": "statusId",
         "Type": "System.Int32",
         "IsRequired": true
+      },
+      {
+        "Name": "PageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -303,22 +339,6 @@
   },
   {
     "ContainingType": "Backend.Controllers.NotificationsController",
-    "Method": "Delete",
-    "RelativePath": "api/Notifications/{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Backend.Controllers.NotificationsController",
     "Method": "MarkRead",
     "RelativePath": "api/Notifications/{id}/read",
     "HttpMethod": "PUT",
@@ -360,6 +380,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Backend.Controllers.NotificationsController",
+    "Method": "GetNotification",
+    "RelativePath": "api/Notifications/GetNotification",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Backend.Controllers.PapersController",
     "Method": "GetAll",
     "RelativePath": "api/Papers",
@@ -380,6 +416,16 @@
       {
         "Name": "entryUser",
         "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageSize",
+        "Type": "System.Int32",
         "IsRequired": false
       }
     ],
@@ -492,6 +538,32 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Backend.Controllers.RolePermissionController",
+    "Method": "RemovePermissionFromUser",
+    "RelativePath": "api/RolePermission/remove-from-user",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Backend.Models.AssignPermissionToUserDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend.Controllers.RolesController",
+    "Method": "GetRoles",
+    "RelativePath": "api/Roles/get-roles",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Backend.Controllers.TasksController",
     "Method": "GetAll",
     "RelativePath": "api/Tasks",
@@ -531,6 +603,16 @@
       },
       {
         "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageSize",
         "Type": "System.Int32",
         "IsRequired": false
       }
@@ -627,6 +709,16 @@
         "Name": "userId",
         "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
+      },
+      {
+        "Name": "PageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -722,7 +814,18 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "PageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -808,8 +911,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "password",
-        "Type": "System.String",
+        "Name": "dto",
+        "Type": "Backend.Models.ResetPasswordDto",
         "IsRequired": true
       }
     ],

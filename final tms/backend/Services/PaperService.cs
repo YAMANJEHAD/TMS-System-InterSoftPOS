@@ -12,7 +12,7 @@ namespace Backend.Services
         private readonly DbClient _dbClient;
         public PaperService(DbClient dbClient) => _dbClient = dbClient;
 
-        public IEnumerable<CancelledPaperDto> GetPaper(DateTime? fromDate, DateTime? toDate, int? entryUser)
+        public IEnumerable<CancelledPaperDto> GetPaper(DateTime? fromDate, DateTime? toDate, int? entryUser, int PageNumber, int PageSize)
         {
             var list = new List<CancelledPaperDto>();
             using var conn = _dbClient.CreateConnection();
@@ -23,6 +23,8 @@ namespace Backend.Services
             cmd.Parameters.AddWithValue("@fromDate", (object)fromDate ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@toDate", (object)toDate ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@entryUser", (object)entryUser ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@PageNumber", PageNumber);
+            cmd.Parameters.AddWithValue("@PageSize", PageSize);
             conn.Open();
             using var rdr = cmd.ExecuteReader();
             while (rdr.Read())

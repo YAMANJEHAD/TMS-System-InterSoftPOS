@@ -1,0 +1,31 @@
+<div class="modal-overlay" *ngIf="show" (click)="onBackdropClick($event)">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ title }}</h2>
+      <button class="close-btn" (click)="close()" aria-label="Close">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="icon-container" [class]="'icon-' + type">
+        <span class="material-icons">
+          {{ type === 'danger' ? 'error_outline' : 
+             type === 'warning' ? 'warning_amber' : 'info' }}
+        </span>
+      </div>
+      <p class="message">{{ message }}</p>
+    </div>
+    <div class="modal-footer">
+      <button class="secondary-button" (click)="onCancel()">
+        {{ cancelText }}
+      </button>
+      <button 
+        class="primary-button" 
+        [class]="'btn-' + type"
+        (click)="onConfirm()">
+        {{ confirmText }}
+      </button>
+    </div>
+  </div>
+</div>
+

@@ -42,6 +42,17 @@ namespace Backend.Controllers
             return Ok(result);
         }
 
+        [HttpGet("GetNotification")]
+        public IActionResult GetNotification(int userId)
+        {
+            var perms = JsonSerializer.Deserialize<List<string>>(HttpContext.Session.GetString("Permissions"));
+            if (perms == null || !perms.Contains("ViewNotifications")) return Unauthorized();
+            var result = _svc.GetNotification(userId);
+            var details = $"Action: GetNotification, Data: {{ \"userId\": {userId} }}";
+            _logService.InsertLog(HttpContext.Session.GetInt32("UserId").Value, "GetNotification", "notification_tasks", userId, details);
+            return Ok(result);
+        }
+
         [HttpPost]
         public IActionResult Create([FromBody] NotificationCreateDto dto)
         {
@@ -61,17 +72,6 @@ namespace Backend.Controllers
             _svc.UpdateNotificationIsRead(id);
             var details = $"Action: UpdateNotificationIsRead, Data: {{ \"notificationId\": {id} }}";
             _logService.InsertLog(HttpContext.Session.GetInt32("UserId").Value, "UpdateNotificationIsRead", "notification_tasks", id, details);
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            var perms = JsonSerializer.Deserialize<List<string>>(HttpContext.Session.GetString("Permissions"));
-            if (perms == null || !perms.Contains("DeleteNotification")) return Unauthorized();
-            _svc.DeleteNotification(id);
-            var details = $"Action: DeleteNotification, Data: {{ \"notificationId\": {id} }}";
-            _logService.InsertLog(HttpContext.Session.GetInt32("UserId").Value, "DeleteNotification", "notification_tasks", id, details);
             return NoContent();
         }
     }

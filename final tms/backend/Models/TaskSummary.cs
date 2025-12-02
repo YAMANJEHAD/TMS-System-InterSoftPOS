@@ -8,6 +8,6 @@ namespace Backend.Models
         public string StatusName { get; set; }
         public string PriorityName { get; set; }
         public string ProjectName { get; set; }
-        public string EntryUser { get; set; }
+        public string AsignTo { get; set; }
     }
 }

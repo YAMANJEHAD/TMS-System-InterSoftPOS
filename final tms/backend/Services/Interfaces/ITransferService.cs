@@ -6,7 +6,7 @@ namespace Backend.Services.Interfaces
 {
     public interface ITransferService
     {
-        IEnumerable<TransferTicketDto> GetAllTransferTicket(DateTime? fromDate, DateTime? toDate, int? ticketNo, int? duplicateCount, int? terminalNumber, int? userId);
+        IEnumerable<TransferTicketDto> GetAllTransferTicket(DateTime? fromDate, DateTime? toDate, int? ticketNo, int? duplicateCount, int? terminalNumber, int? userId, int PageNumber, int PageSize);
         void InsertTransferTicketNew(TransferCreateDto dto);
         void UpdateTransferTicket(TransferUpdateDto dto);
         

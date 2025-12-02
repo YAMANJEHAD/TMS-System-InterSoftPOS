@@ -52,7 +52,7 @@ namespace Backend.Services
             return list;
         }
 
-        public IEnumerable<InventoryItemDto> GetInventoryByStatus(int statusId)
+        public IEnumerable<InventoryItemDto> GetInventoryByStatus(int statusId, int PageNumber, int PageSize)
         {
             var list = new List<InventoryItemDto>();
             using var conn = _dbClient.CreateConnection();
@@ -61,6 +61,8 @@ namespace Backend.Services
                 CommandType = CommandType.StoredProcedure
             };
             cmd.Parameters.AddWithValue("@status_id", statusId);
+            cmd.Parameters.AddWithValue("@PageNumber", PageNumber);
+            cmd.Parameters.AddWithValue("@PageSize", PageSize);
             conn.Open();
             using var rdr = cmd.ExecuteReader();
             while (rdr.Read())

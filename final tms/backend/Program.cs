@@ -6,7 +6,7 @@ using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//  Add Services 
+ 
 
 // Core services
 builder.Services.AddSingleton<DbClient>();
@@ -24,6 +24,8 @@ builder.Services.AddScoped<IPaperService, PaperService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<ITransferService, TransferService>();
 builder.Services.AddScoped<ITransferChartService, TransferChartService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+
 
 
 // Permissions, Logging, Session

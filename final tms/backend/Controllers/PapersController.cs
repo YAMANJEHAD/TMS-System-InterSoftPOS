@@ -37,10 +37,11 @@ namespace Backend.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll([FromQuery] DateTime? fromDate, [FromQuery] DateTime? toDate, [FromQuery] int? entryUser)
+        public IActionResult GetAll([FromQuery] DateTime? fromDate, [FromQuery] DateTime? toDate, [FromQuery] int? entryUser,
+            [FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 10)
         {
             if (!HasPermission("GetPapers")) return Unauthorized();
-            var list = _svc.GetPaper(fromDate, toDate, entryUser);
+            var list = _svc.GetPaper(fromDate, toDate, entryUser, PageNumber, PageSize);
             LogAction("GetPapers", "papers", new { FromDate = fromDate, ToDate = toDate, EntryUser = entryUser });
             return Ok(list);
         }

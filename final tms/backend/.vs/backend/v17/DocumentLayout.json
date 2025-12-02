@@ -5,18 +5,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{71D41671-FF64-41D3-B3D7-23A1C3AD1947}|backend.csproj|c:\\users\\user\\onedrive\\desktop\\final tms2025\\final tms\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{71D41671-FF64-41D3-B3D7-23A1C3AD1947}|backend.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{71D41671-FF64-41D3-B3D7-23A1C3AD1947}|backend.csproj|c:\\users\\user\\onedrive\\desktop\\final tms2025\\final tms\\backend\\services\\interfaces\\itransferservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{71D41671-FF64-41D3-B3D7-23A1C3AD1947}|backend.csproj|solutionrelative:services\\interfaces\\itransferservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{71D41671-FF64-41D3-B3D7-23A1C3AD1947}|backend.csproj|c:\\users\\user\\onedrive\\desktop\\final tms2025\\final tms\\backend\\services\\joborderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{71D41671-FF64-41D3-B3D7-23A1C3AD1947}|backend.csproj|solutionrelative:services\\joborderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{71D41671-FF64-41D3-B3D7-23A1C3AD1947}|backend.csproj|c:\\users\\user\\onedrive\\desktop\\final tms2025\\final tms\\backend\\services\\inventoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{71D41671-FF64-41D3-B3D7-23A1C3AD1947}|backend.csproj|solutionrelative:services\\inventoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,47 +14,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ITransferService.cs",
-              "DocumentMoniker": "C:\\Users\\user\\OneDrive\\Desktop\\final tms2025\\final tms\\backend\\Services\\Interfaces\\ITransferService.cs",
-              "RelativeDocumentMoniker": "Services\\Interfaces\\ITransferService.cs",
-              "ToolTip": "C:\\Users\\user\\OneDrive\\Desktop\\final tms2025\\final tms\\backend\\Services\\Interfaces\\ITransferService.cs",
-              "RelativeToolTip": "Services\\Interfaces\\ITransferService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-26T13:51:09.475Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "JobOrderService.cs",
-              "DocumentMoniker": "C:\\Users\\user\\OneDrive\\Desktop\\final tms2025\\final tms\\backend\\Services\\JobOrderService.cs",
-              "RelativeDocumentMoniker": "Services\\JobOrderService.cs",
-              "ToolTip": "C:\\Users\\user\\OneDrive\\Desktop\\final tms2025\\final tms\\backend\\Services\\JobOrderService.cs",
-              "RelativeToolTip": "Services\\JobOrderService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAA8AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-26T13:49:36.462Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "InventoryService.cs",
-              "DocumentMoniker": "C:\\Users\\user\\OneDrive\\Desktop\\final tms2025\\final tms\\backend\\Services\\InventoryService.cs",
-              "RelativeDocumentMoniker": "Services\\InventoryService.cs",
-              "ToolTip": "C:\\Users\\user\\OneDrive\\Desktop\\final tms2025\\final tms\\backend\\Services\\InventoryService.cs",
-              "RelativeToolTip": "Services\\InventoryService.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAYwCEAAAAMAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-26T13:49:09.707Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -75,9 +24,9 @@
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\user\\OneDrive\\Desktop\\final tms2025\\final tms\\backend\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAABKAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAABIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-22T18:13:51.208Z",
+              "WhenOpened": "2025-11-30T20:49:53.365Z",
               "EditorCaption": ""
             }
           ]

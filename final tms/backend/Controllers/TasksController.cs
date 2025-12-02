@@ -45,10 +45,10 @@ namespace Backend.Controllers
         public IActionResult GetAll([FromQuery] DateTime? fromDate, [FromQuery] DateTime? toDate,
                                     [FromQuery] string title = "", [FromQuery] int statusId = -1,
                                     [FromQuery] int priorityId = -1, [FromQuery] int projectId = -1,
-                                    [FromQuery] int userId = -1)
+                                    [FromQuery] int userId = -1, [FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 10)
         {
             if (!HasPermission("GetTasks")) return Unauthorized();
-            var tasks = _svc.GetAll(fromDate, toDate, title, statusId, priorityId, projectId, userId);
+            var tasks = _svc.GetAll(fromDate, toDate, title, statusId, priorityId, projectId, userId, PageNumber, PageSize);
             LogAction("GetTasks", "tasks", new { fromDate, toDate, title, statusId, priorityId, projectId, userId });
             return Ok(tasks);
         }

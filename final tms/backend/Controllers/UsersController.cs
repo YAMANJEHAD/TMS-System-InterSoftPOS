@@ -4,7 +4,8 @@ using Backend.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 using Backend.Helpers;
-using Backend.Models;
+using System.Linq;
+using System.Collections.Generic;
 using backend.Models;
 
 namespace Backend.Controllers
@@ -22,11 +23,11 @@ namespace Backend.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll([FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 10)
         {
             var perms = JsonSerializer.Deserialize<List<string>>(HttpContext.Session.GetString("Permissions"));
             if (perms == null || !perms.Contains("GetUsers")) return Unauthorized();
-            var users = _svc.GetUsers();
+            var users = _svc.GetUsers(PageNumber, PageSize);
             var userId = HttpContext.Session.GetInt32("UserId").Value;
             var details = $"Action: GetUsers, Data: {{}}";
             _logService.InsertLog(userId, "GetUsers", "users", details: details);
@@ -82,14 +83,26 @@ namespace Backend.Controllers
         }
 
         [HttpPatch("reset-password")]
-        public IActionResult ResetPassword([FromBody] string password)
+        public IActionResult ResetPassword([FromBody] ResetPasswordDto dto)
         {
             var userId = HttpContext.Session.GetInt32("UserId").Value;
             var perms = JsonSerializer.Deserialize<List<string>>(HttpContext.Session.GetString("Permissions"));
             if (perms == null || !perms.Contains("ResetUserPassword"))
                 return Unauthorized();
 
-            _svc.ResetPasswordById(userId, password);
+            // Check if DTO is null
+            if (dto == null)
+                return BadRequest(new { message = "Request body is required", received = "null" });
+
+            // Check if DTO is null
+            if (dto.password != dto.confirmPassword)
+                return BadRequest(new { message = "The passwords are not matched", received = "null" });
+
+            // Check if password property is null or empty
+            if (string.IsNullOrWhiteSpace(dto.password))
+                return BadRequest(new { message = "Password is required", received = dto.password ?? "null" });
+
+            _svc.ResetPasswordById(userId, dto.password);
 
             var details = $"Action: ResetPassword, Data: UserId={userId}";
             _logService.InsertLog(userId, "ResetPassword", "users", userId, details);

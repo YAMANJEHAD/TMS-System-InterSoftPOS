@@ -1,0 +1,90 @@
+<div class="dashboard-container">
+  <h1>Dashboard</h1>
+
+  <div class="error-message" *ngIf="errorMessage">
+    <span class="material-icons">error</span>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">
+    Loading dashboard data...
+  </div>
+
+  <div class="dashboard-content" *ngIf="stats && !isLoading">
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <span class="material-icons">assignment</span>
+        </div>
+        <div class="stat-content">
+        <div class="stat-label">Total Tasks</div>
+        <div class="stat-value">{{ stats.totalTasks || stats.TotalTasks || 0 }}</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <span class="material-icons">check_circle</span>
+        </div>
+        <div class="stat-content">
+        <div class="stat-label">Completed Tasks</div>
+        <div class="stat-value">{{ stats.completedTasks || stats.CompletedTasks || 0 }}</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <span class="material-icons">sync</span>
+        </div>
+        <div class="stat-content">
+        <div class="stat-label">Under Process</div>
+        <div class="stat-value">{{ stats.underProcessTasks || stats.UnderProcessTasks || 0 }}</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <span class="material-icons">pause_circle</span>
+        </div>
+        <div class="stat-content">
+        <div class="stat-label">On Hold</div>
+        <div class="stat-value">{{ stats.onHoldTasks || stats.OnHoldTasks || 0 }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Grid -->
+    <div class="charts-grid">
+      <!-- Project Counts Donut Chart -->
+      <div class="card">
+        <div class="card-header-with-icon">
+          <span class="material-icons">folder</span>
+        <h2>Projects Overview</h2>
+        </div>
+        <div class="chart-container">
+          <canvas baseChart
+            [data]="projectChartData"
+            [options]="projectChartOptions"
+            type="doughnut">
+          </canvas>
+        </div>
+        <div class="no-data" *ngIf="(stats.projectCounts || stats.ProjectCounts || []).length === 0">
+          No project data available
+        </div>
+      </div>
+
+      <!-- Task Counts by Date Chart -->
+      <div class="card">
+        <div class="card-header-with-icon">
+          <span class="material-icons">timeline</span>
+        <h2>Tasks Over Time</h2>
+        </div>
+        <div class="chart-container">
+          <canvas baseChart
+            [data]="taskDateChartData"
+            [options]="taskDateChartOptions"
+            type="line">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

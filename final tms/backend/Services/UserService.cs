@@ -16,7 +16,7 @@ namespace Backend.Services
             _dbClient = dbClient;
         }
 
-        public IEnumerable<UserDto> GetUsers()
+        public IEnumerable<UserDto> GetUsers(int PageNumber, int PageSize)
         {
             var list = new List<UserDto>();
             using var conn = _dbClient.CreateConnection();
@@ -24,6 +24,8 @@ namespace Backend.Services
             {
                 CommandType = CommandType.StoredProcedure
             };
+            cmd.Parameters.AddWithValue("@PageNumber", PageNumber);
+            cmd.Parameters.AddWithValue("@PageSize", PageSize);
             conn.Open();
             using var rdr = cmd.ExecuteReader();
             while (rdr.Read())
@@ -35,13 +37,16 @@ namespace Backend.Services
                     Email = rdr["email"].ToString(),
                     RoleName = rdr["role_name"].ToString(),
                     DepartmentName = rdr["department_name"].ToString(),
-                    IsActive = (bool)rdr["isActive"]
+                    IsActive = (bool)rdr["isActive"],
+                    AvatarColor = rdr["avatar_color"] != DBNull.Value ? rdr["avatar_color"].ToString() : null,
+                    Theme = rdr["theme"] != DBNull.Value ? rdr["theme"].ToString() : null,
+                    Phone = rdr["phone"] != DBNull.Value ? rdr["phone"].ToString() : null
                 });
             }
             return list;
         }
 
-        public void InsertUser(string name, string email, string passwordHash, string roleId, int departmentId, int phone)
+        public void InsertUser(string name, string email, string passwordHash, int roleId, int departmentId, int phone)
         {
             var encryptedPassword = EncryptionHelper.Encrypt(passwordHash);
             using var conn = _dbClient.CreateConnection();
@@ -59,7 +64,7 @@ namespace Backend.Services
             cmd.ExecuteNonQuery();
         }
 
-        public void UpdateUser(int userId, string name, string email, string passwordHash, string roleId, int departmentId, int phone)
+        public void UpdateUser(int userId, string name, string email, string passwordHash, int roleId, int departmentId, int phone)
         {
             var encryptedPassword = EncryptionHelper.Encrypt(passwordHash);
             using var conn = _dbClient.CreateConnection();

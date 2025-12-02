@@ -1,0 +1,146 @@
+<div class="my-tasks-container">
+  <div class="page-header">
+    <h1>My Tasks</h1>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-card card">
+    <div class="filters-header">
+      <span class="material-icons">filter_list</span>
+    <h2>Filters</h2>
+    </div>
+    <div class="filters-grid">
+      <div class="form-group">
+        <label>
+          <span class="material-icons">event</span>
+          From Date
+        </label>
+        <input type="date" [(ngModel)]="fromDate" />
+      </div>
+      <div class="form-group">
+        <label>
+          <span class="material-icons">event</span>
+          To Date
+        </label>
+        <input type="date" [(ngModel)]="toDate" />
+      </div>
+      <div class="form-group">
+        <label>
+          <span class="material-icons">label</span>
+          Status
+        </label>
+        <select [(ngModel)]="statusId">
+          <option [value]="-1">All Statuses</option>
+          <option *ngFor="let status of statuses" [value]="status.statusId">
+            {{ status.statusName }}
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>
+          <span class="material-icons">flag</span>
+          Priority
+        </label>
+        <select [(ngModel)]="priorityId">
+          <option [value]="-1">All Priorities</option>
+          <option *ngFor="let priority of priorities" [value]="priority.priorityId">
+            {{ priority.priorityName }}
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>
+          <span class="material-icons">folder</span>
+          Project
+        </label>
+        <select [(ngModel)]="projectId">
+          <option [value]="-1">All Projects</option>
+          <option *ngFor="let project of projects" [value]="project.projectId">
+            {{ project.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="filter-actions">
+      <button class="primary-button" (click)="applyFilters()">
+        <span class="material-icons">check</span>
+        <span>Apply Filters</span>
+      </button>
+      <button class="secondary-button" (click)="resetFilters()">
+        <span class="material-icons">refresh</span>
+        <span>Reset</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Tasks Table -->
+  <div class="table-container card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+      <h2>My Tasks Table</h2>
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <button class="excel-export-button" (click)="exportToExcel()">
+          <span class="material-icons">table_chart</span>
+          <span>Export Excel</span>
+        </button>
+        <label>Items per page:</label>
+        <select [(ngModel)]="pageSize" (change)="onPageSizeChange()" style="padding: 5px 10px; border-radius: 4px;">
+          <option [value]="10">10</option>
+          <option [value]="25">25</option>
+          <option [value]="50">50</option>
+          <option [value]="100">100</option>
+        </select>
+      </div>
+    </div>
+    <div class="loading" *ngIf="isLoading">Loading tasks...</div>
+    
+    <table *ngIf="!isLoading">
+      <thead>
+        <tr>
+          <th>Task ID</th>
+          <th>Title</th>
+          <th>Project</th>
+          <th>Status</th>
+          <th>Priority</th>
+          <th>Due Date</th>
+          <th>Assigned To</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let task of filteredTasks">
+          <td>{{ task.taskId }}</td>
+          <td>{{ task.title }}</td>
+          <td>{{ task.projectName }}</td>
+          <td>
+            <span [class]="'status-badge ' + getStatusClass(task.statusName)">
+              {{ task.statusName }}
+            </span>
+          </td>
+          <td>
+            <span [class]="'priority-badge ' + getPriorityClass(task.priorityName)">
+              {{ task.priorityName }}
+            </span>
+          </td>
+          <td>{{ task.dueDate | date:'shortDate' }}</td>
+          <td>{{ task.asignTo }}</td>
+          <td>
+            <button class="action-btn" (click)="viewTaskDetails(task.taskId)" title="View Details">
+              <span class="material-icons">visibility</span>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredTasks.length === 0">
+          <td colspan="8" class="no-data">No tasks found</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="tasks.length > 0">
+      <button class="btn-pagination" (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+      <span>Page {{ currentPage }}<span *ngIf="totalPages > currentPage"> of {{ totalPages }}</span></span>
+      <button class="btn-pagination" (click)="onPageChange(currentPage + 1)" [disabled]="tasks.length < pageSize">Next</button>
+      <span class="pagination-info" *ngIf="totalItems > 0">(Showing {{ (currentPage - 1) * pageSize + 1 }}-{{ (currentPage - 1) * pageSize + tasks.length }} of ~{{ totalItems }}+)</span>
+    </div>
+  </div>
+</div>

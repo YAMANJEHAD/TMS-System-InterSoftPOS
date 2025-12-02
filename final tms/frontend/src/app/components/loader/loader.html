@@ -1,0 +1,12 @@
+<div class="loader-container" *ngIf="isLoading" [class.overlay]="overlay">
+  <div class="loader-wrapper" [class.small]="size === 'small'" [class.medium]="size === 'medium'" [class.large]="size === 'large'">
+    <div class="spinner">
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+    </div>
+    <p class="loader-message" *ngIf="message">{{ message }}</p>
+  </div>
+</div>
+

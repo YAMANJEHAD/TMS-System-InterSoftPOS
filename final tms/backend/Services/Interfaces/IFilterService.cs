@@ -9,7 +9,11 @@ namespace Backend.Services.Interfaces
         IEnumerable<ProjectDto> GetProjectForFilter();
         IEnumerable<ReasonDto> GetReasonForFilter();
         IEnumerable<StatusDto> GetStatusForFilter();
+        IEnumerable<StatusDto> GetInventoryStatusForFilter();
         IEnumerable<TechnicianDto> GetTechniciansForFilter();
         IEnumerable<UserFilterDto> GetUsersForFilter();
+        IEnumerable<PermissionsDto> GetAllPermissions(int userId);
+
+
     }
 }

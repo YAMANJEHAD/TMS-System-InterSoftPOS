@@ -1,0 +1,175 @@
+<header class="header" [class.sidebar-collapsed]="isSidebarCollapsed">
+  <div class="header-left">
+    <button class="sidebar-toggle-btn" (click)="toggleSidebar()" [attr.aria-label]="isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'">
+      <span class="material-icons">menu</span>
+    </button>
+    <div class="time-date">
+      <div class="time">
+        <span class="material-icons">schedule</span>
+        {{ currentTime }}
+      </div>
+      <div class="date">{{ currentDate }}</div>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <button 
+      class="add-task-btn" 
+      (click)="openAddTaskModal()"
+      *ngIf="hasPermission('InsertTask')">
+      + Add Task
+    </button>
+
+    <div class="notifications-container">
+      <button class="notification-btn" (click)="toggleNotifications(); $event.stopPropagation()">
+        <span class="material-icons icon">notifications</span>
+        <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+      </button>
+      
+      <div class="notifications-dropdown" *ngIf="showNotifications" (click)="$event.stopPropagation()">
+        <div class="dropdown-header">
+          <h3>Notifications</h3>
+          <button class="clear-btn" (click)="clearOldNotifications()">Clear Old</button>
+        </div>
+        <div class="notifications-list">
+          <div 
+            class="notification-item" 
+            *ngFor="let notification of notifications"
+            [class.unread]="!notification.isRead">
+            <div class="notification-content">
+              <p class="message">{{ notification.message }}</p>
+              <span class="time">{{ notification.createdAt | date:'short' }}</span>
+            </div>
+            <div class="notification-actions">
+              <button 
+                *ngIf="!notification.isRead"
+                (click)="markNotificationAsRead(notification.notificationId)">
+                Mark Read
+              </button>
+              <button (click)="deleteNotification(notification.notificationId)">Delete</button>
+            </div>
+          </div>
+          <div class="no-notifications" *ngIf="notifications.length === 0">
+            No notifications
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="user-profile">
+      <div class="user-info" (click)="toggleUserMenu(); $event.stopPropagation()">
+        <div class="avatar" [style.background-color]="userAvatarColor">{{ getInitials() }}</div>
+        <div class="user-details">
+          <span class="user-name">{{ userName }}</span>
+          <span class="user-role">{{ userRole }}</span>
+        </div>
+        <span class="material-icons dropdown-icon">keyboard_arrow_down</span>
+      </div>
+      
+      <div class="user-menu" *ngIf="showUserMenu" (click)="$event.stopPropagation()">
+        <div class="menu-item">
+          <span class="label">Email:</span>
+          <span class="value">{{ userEmail }}</span>
+        </div>
+        <button class="menu-item" (click)="goToSettings()">
+          Settings
+        </button>
+        <button class="menu-item logout" (click)="logout()">
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Task Modal -->
+  <div class="modal-overlay" *ngIf="showAddTaskModal" (click)="closeAddTaskModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Add New Task</h2>
+        <button class="close-btn" (click)="closeAddTaskModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="createTask()">
+          <div class="form-group">
+            <label>Title *</label>
+            <input type="text" [(ngModel)]="taskForm.title" name="title" required />
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea [(ngModel)]="taskForm.description" name="description" rows="3"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Due Date *</label>
+            <input type="date" [(ngModel)]="taskForm.dueDate" name="dueDate" required />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Status *</label>
+              <select [(ngModel)]="taskForm.statusId" name="statusId" required>
+                <option [value]="0">Select Status</option>
+                <option *ngFor="let status of statuses" [value]="status.statusId">
+                  {{ status.statusName }}
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Priority *</label>
+              <select [(ngModel)]="taskForm.priorityId" name="priorityId" required>
+                <option [value]="0">Select Priority</option>
+                <option *ngFor="let priority of priorities" [value]="priority.priorityId">
+                  {{ priority.priorityName }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Project *</label>
+              <select [(ngModel)]="taskForm.projectId" name="projectId" required>
+                <option [value]="0">Select Project</option>
+                <option *ngFor="let project of projects" [value]="project.projectId">
+                  {{ project.name }}
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Assigned Users</label>
+              <select 
+                [(ngModel)]="taskForm.selectedUserIds" 
+                name="selectedUserIds" 
+                multiple
+                size="5"
+                class="multi-select">
+                <option *ngFor="let user of users" [value]="user.userId">
+                  {{ user.name }}
+                </option>
+              </select>
+              <small class="form-hint">Hold Ctrl (or Cmd on Mac) to select multiple users</small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Upload File</label>
+            <input type="file" (change)="onTaskFileSelected($event)" />
+            <small *ngIf="taskForm.fileName">Selected: {{ taskForm.fileName }}</small>
+          </div>
+
+          <div class="modal-actions">
+            <button type="submit" class="primary-button" [disabled]="isSubmittingTask">
+              {{ isSubmittingTask ? 'Creating...' : 'Create Task' }}
+            </button>
+            <button type="button" class="secondary-button" (click)="closeAddTaskModal()">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</header>

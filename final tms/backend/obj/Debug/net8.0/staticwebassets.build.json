@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "pgotWCz8SCsNt/5tMayT3gdb33GH+Qwb1rh7XvWbKGg=",
+  "Hash": "LEIJIIZCrFy10dkilToZ96ke3UUHOIAUMuVRcIwzq6Q=",
   "Source": "backend",
   "BasePath": "_content/backend",
   "Mode": "Default",
@@ -10,11 +10,219 @@
     {
       "Name": "backend\\wwwroot",
       "Source": "backend",
-      "ContentRoot": "C:\\Users\\user\\OneDrive\\Desktop\\final tms\\backend\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\user\\OneDrive\\Desktop\\final tms2025\\final tms\\backend\\wwwroot\\",
       "BasePath": "_content/backend",
       "Pattern": "**"
     }
   ],
-  "Assets": [],
-  "Endpoints": []
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\user\\OneDrive\\Desktop\\final tms2025\\final tms\\backend\\wwwroot\\Files\\logo_20251129_205718.jpg",
+      "SourceId": "backend",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\user\\OneDrive\\Desktop\\final tms2025\\final tms\\backend\\wwwroot\\",
+      "BasePath": "_content/backend",
+      "RelativePath": "Files/logo_20251129_205718#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "hq3vaoxnkw",
+      "Integrity": "qZ7CVTW6mOVFd+RkZm31Ks/wT05aCpV8fTFemvKxqxs=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Files\\logo_20251129_205718.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\user\\OneDrive\\Desktop\\final tms2025\\final tms\\backend\\wwwroot\\Files\\logo_20251202_035705.jpg",
+      "SourceId": "backend",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\user\\OneDrive\\Desktop\\final tms2025\\final tms\\backend\\wwwroot\\",
+      "BasePath": "_content/backend",
+      "RelativePath": "Files/logo_20251202_035705#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "hq3vaoxnkw",
+      "Integrity": "qZ7CVTW6mOVFd+RkZm31Ks/wT05aCpV8fTFemvKxqxs=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Files\\logo_20251202_035705.jpg"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "Files/logo_20251129_205718.hq3vaoxnkw.jpg",
+      "AssetFile": "C:\\Users\\user\\OneDrive\\Desktop\\final tms2025\\final tms\\backend\\wwwroot\\Files\\logo_20251129_205718.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "5679"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"qZ7CVTW6mOVFd+RkZm31Ks/wT05aCpV8fTFemvKxqxs=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 29 Nov 2025 17:57:18 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "hq3vaoxnkw"
+        },
+        {
+          "Name": "label",
+          "Value": "Files/logo_20251129_205718.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-qZ7CVTW6mOVFd+RkZm31Ks/wT05aCpV8fTFemvKxqxs="
+        }
+      ]
+    },
+    {
+      "Route": "Files/logo_20251129_205718.jpg",
+      "AssetFile": "C:\\Users\\user\\OneDrive\\Desktop\\final tms2025\\final tms\\backend\\wwwroot\\Files\\logo_20251129_205718.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "5679"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"qZ7CVTW6mOVFd+RkZm31Ks/wT05aCpV8fTFemvKxqxs=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 29 Nov 2025 17:57:18 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-qZ7CVTW6mOVFd+RkZm31Ks/wT05aCpV8fTFemvKxqxs="
+        }
+      ]
+    },
+    {
+      "Route": "Files/logo_20251202_035705.hq3vaoxnkw.jpg",
+      "AssetFile": "C:\\Users\\user\\OneDrive\\Desktop\\final tms2025\\final tms\\backend\\wwwroot\\Files\\logo_20251202_035705.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "5679"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"qZ7CVTW6mOVFd+RkZm31Ks/wT05aCpV8fTFemvKxqxs=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 02 Dec 2025 00:57:05 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "hq3vaoxnkw"
+        },
+        {
+          "Name": "label",
+          "Value": "Files/logo_20251202_035705.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-qZ7CVTW6mOVFd+RkZm31Ks/wT05aCpV8fTFemvKxqxs="
+        }
+      ]
+    },
+    {
+      "Route": "Files/logo_20251202_035705.jpg",
+      "AssetFile": "C:\\Users\\user\\OneDrive\\Desktop\\final tms2025\\final tms\\backend\\wwwroot\\Files\\logo_20251202_035705.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "5679"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"qZ7CVTW6mOVFd+RkZm31Ks/wT05aCpV8fTFemvKxqxs=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 02 Dec 2025 00:57:05 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-qZ7CVTW6mOVFd+RkZm31Ks/wT05aCpV8fTFemvKxqxs="
+        }
+      ]
+    }
+  ]
 }

@@ -65,5 +65,20 @@ namespace Backend.Controllers
 
             return NoContent();
         }
+
+        // Remove permission from user
+        [HttpDelete("remove-from-user")]
+        public IActionResult RemovePermissionFromUser([FromBody] AssignPermissionToUserDto dto)
+        {
+            if (!HasPermission("RemovePermissionFromUser"))
+                return Unauthorized();
+
+            _svc.RemovePermissionFromUser(dto.UserId, dto.PermissionId);
+
+            LogAction("RemovePermissionFromUser", "permissions", dto);
+
+            return NoContent();
+        }
+
     }
 }

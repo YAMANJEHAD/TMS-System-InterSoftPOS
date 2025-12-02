@@ -1,0 +1,325 @@
+<div class="inventory-container">
+  <app-breadcrumb [items]="[{ label: 'Inventory' }]"></app-breadcrumb>
+  
+  <div class="page-header">
+    <h1>Inventory</h1>
+    <button class="primary-button" (click)="openAddModal()">
+      <span class="material-icons">add</span>
+      <span>Add New Inventory</span>
+    </button>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-section">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-icons">inventory_2</span>
+      </div>
+      <div class="stat-content">
+      <div class="stat-label">Total Entries</div>
+      <div class="stat-value">{{ totalEntries }}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-icons">today</span>
+      </div>
+      <div class="stat-content">
+      <div class="stat-label">Today's Entries</div>
+      <div class="stat-value">{{ todayEntries }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reason Counts - Hidden -->
+  <div class="card reason-counts" *ngIf="false">
+    <h2>Reason Count</h2>
+    <div class="reason-list">
+      <div class="reason-item" *ngFor="let reason of reasonCounts">
+        <span class="reason-name">{{ reason.reasonName }}</span>
+        <span class="reason-count">{{ reason.count }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-card card">
+    <div class="filters-header">
+      <span class="material-icons">filter_list</span>
+    <h2>Filters</h2>
+    </div>
+    <div class="filters-grid">
+      <div class="form-group">
+        <label>
+          <span class="material-icons">inventory_2</span>
+          Inventory Status
+        </label>
+        <select [(ngModel)]="statusId" (change)="onStatusFilterChange()">
+          <option *ngFor="let status of statuses" [value]="status.statusId">
+            {{ status.statusName }}
+          </option>
+        </select>
+        <small *ngIf="statuses.length === 0" class="filter-error">No statuses available. Please refresh the page.</small>
+      </div>
+      <div class="form-group">
+        <label>
+          <span class="material-icons">event</span>
+          From Date
+        </label>
+        <input type="date" [(ngModel)]="fromDate" (change)="onDateFilterChange()" />
+      </div>
+      <div class="form-group">
+        <label>
+          <span class="material-icons">event</span>
+          To Date
+        </label>
+        <input type="date" [(ngModel)]="toDate" (change)="onDateFilterChange()" />
+      </div>
+      <div class="form-group">
+        <label>
+          <span class="material-icons">person</span>
+          Filter by User Name
+        </label>
+        <select [(ngModel)]="userId" (change)="onUserFilterChange()">
+          <option [value]="-1">All Users</option>
+          <option *ngFor="let user of users" [value]="user.userId">
+            {{ user.name }}
+          </option>
+        </select>
+        <small *ngIf="users.length === 0" class="filter-error">No users available</small>
+      </div>
+      <div class="form-group">
+        <label>
+          <span class="material-icons">engineering</span>
+          Filter by Technician
+        </label>
+        <select [(ngModel)]="techId" (change)="onTechFilterChange()">
+          <option [value]="-1">All Technicians</option>
+          <option *ngFor="let tech of technicians" [value]="tech.techId">
+            {{ tech.techName }}
+          </option>
+        </select>
+        <small *ngIf="technicians.length === 0" class="filter-error">No technicians available</small>
+      </div>
+    </div>
+    <div class="filter-actions">
+      <button class="primary-button" (click)="applyFilters()">
+        <span class="material-icons">check</span>
+        <span>Apply Filters</span>
+      </button>
+      <button class="secondary-button" (click)="resetFilters()">
+        <span class="material-icons">refresh</span>
+        <span>Reset</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Inventory Table -->
+  <div class="table-container card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+      <h2>All Inventory</h2>
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <button class="excel-export-button" (click)="exportToExcel()">
+          <span class="material-icons">table_chart</span>
+          <span>Export Excel</span>
+        </button>
+        <label>Items per page:</label>
+        <select [(ngModel)]="pageSize" (change)="onPageSizeChange()" style="padding: 5px 10px; border-radius: 4px;">
+          <option [value]="10">10</option>
+          <option [value]="25">25</option>
+          <option [value]="50">50</option>
+          <option [value]="100">100</option>
+        </select>
+      </div>
+    </div>
+    <div class="loading" *ngIf="isLoading">Loading inventory...</div>
+    
+    <table *ngIf="!isLoading">
+      <thead>
+        <tr>
+          <th>Terminal Number</th>
+          <th>Alt Terminal</th>
+          <th>Serial Number</th>
+          <th>Tech Name</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <th>User</th>
+          <th>Entry Date</th>
+          <th>Reject Reason</th>
+          <th class="action-column">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of filteredInventory">
+          <td>{{ item.terminalNumber }}</td>
+          <td>{{ item.altTerminalNumber }}</td>
+          <td>{{ item.serialNumber }}</td>
+          <td>{{ item.techName }}</td>
+          <td>{{ item.reasonName }}</td>
+          <td>
+            <span [class]="'status-badge status-' + getStatusClass(item.statusName)">
+              {{ item.statusName }}
+            </span>
+          </td>
+          <td>
+            <div class="user-cell">
+              <div class="user-avatar" [style.background-color]="getUserAvatarColor(item.userName)">
+                {{ getUserInitials(item.userName) }}
+              </div>
+              <span class="user-name">{{ item.userName }}</span>
+            </div>
+          </td>
+          <td>{{ item.entryDate | date:'shortDate' }}</td>
+          <td>{{ item.rejectReason || '-' }}</td>
+          <td class="action-column">
+            <div class="action-buttons">
+              <button class="btn-approve" (click)="approveInventory(item.terminalId)" title="Approve">
+                <span class="material-icons">check_circle</span>
+              </button>
+              <button class="btn-reject" (click)="openRejectModal(item.terminalId)" title="Reject">
+                <span class="material-icons">cancel</span>
+              </button>
+              <button class="btn-delete" (click)="openDeleteModal(item.terminalId)" title="Delete">
+                <span class="material-icons">delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="filteredInventory.length === 0">
+          <td colspan="10" class="no-data">No inventory found</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="inventory.length > 0">
+      <button class="btn-pagination" (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+      <span>Page {{ currentPage }}<span *ngIf="totalPages > currentPage"> of {{ totalPages }}</span></span>
+      <button class="btn-pagination" (click)="onPageChange(currentPage + 1)" [disabled]="inventory.length < pageSize">Next</button>
+      <span class="pagination-info" *ngIf="totalItems > 0">(Showing {{ (currentPage - 1) * pageSize + 1 }}-{{ (currentPage - 1) * pageSize + inventory.length }} of ~{{ totalItems }}+)</span>
+    </div>
+  </div>
+
+  <!-- Add Inventory Modal -->
+  <div class="modal" *ngIf="showAddModal" (click)="closeAddModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Add Inventory</h2>
+        <button class="close-btn" (click)="closeAddModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <!-- Row 1: Terminal Number * | Serial Number -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Terminal Number *</label>
+            <input type="text" [(ngModel)]="formData.terminalNumber" />
+          </div>
+          <div class="form-group">
+            <label>Serial Number</label>
+            <input type="text" [(ngModel)]="formData.serialNumber" />
+          </div>
+        </div>
+        
+        <!-- Row 2: Alt Terminal Number | Alt Serial Number -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Alt Terminal Number</label>
+            <input type="text" [(ngModel)]="formData.altTerminalNumber" />
+          </div>
+          <div class="form-group">
+            <label>Alt Serial Number</label>
+            <input type="text" [(ngModel)]="formData.altSerialNumber" />
+          </div>
+        </div>
+        
+        <!-- Row 3: Technician * | Reason * -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Technician *</label>
+            <select [(ngModel)]="formData.techId">
+              <option [value]="0">Select Technician</option>
+              <option *ngFor="let tech of technicians" [value]="tech.techId">
+                {{ tech.techName }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Reason *</label>
+            <select [(ngModel)]="formData.reasonId">
+              <option [value]="0">Select Reason</option>
+              <option *ngFor="let reason of reasons" [value]="reason.reasonId">
+                {{ reason.reasonName }}
+              </option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Row 4: Enter new technician name -->
+        <div class="form-group">
+          <label>Enter new technician name</label>
+          <div style="display: flex; gap: 8px; align-items: flex-end;">
+            <input type="text" [(ngModel)]="newTechnicianName" placeholder="Enter new technician name" style="flex: 1;" />
+            <button class="secondary-button" (click)="addTechnicianFromModal()" type="button" style="white-space: nowrap;">Add Technician</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-button" (click)="closeAddModal()">Cancel</button>
+        <button class="primary-button" (click)="createInventory()">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Technician Modal -->
+  <div class="modal" *ngIf="showTechnicianModal" (click)="closeTechnicianModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Add New Technician</h2>
+        <button class="close-btn" (click)="closeTechnicianModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Technician Name *</label>
+          <input type="text" [(ngModel)]="newTechnicianName" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-button" (click)="closeTechnicianModal()">Cancel</button>
+        <button class="primary-button" (click)="createTechnician()">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reject Modal -->
+  <div class="modal" *ngIf="showRejectModal" (click)="closeRejectModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Reject Inventory</h2>
+        <button class="close-btn" (click)="closeRejectModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Reject Reason *</label>
+          <textarea [(ngModel)]="rejectReason" rows="4" placeholder="Enter reject reason" required></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-button" (click)="closeRejectModal()">Cancel</button>
+        <button class="btn-reject" (click)="rejectInventory()">Reject</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <app-confirmation-modal
+    [show]="showDeleteModal"
+    title="Delete Inventory Item"
+    message="Are you sure you want to delete this inventory item? This action cannot be undone."
+    confirmText="Delete"
+    cancelText="Cancel"
+    type="danger"
+    (confirmed)="deleteInventory()"
+    (closed)="closeDeleteModal()"
+    (cancelled)="closeDeleteModal()">
+  </app-confirmation-modal>
+</div>

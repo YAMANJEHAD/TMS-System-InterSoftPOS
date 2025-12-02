@@ -7,8 +7,8 @@ namespace Backend.Services.Interfaces
     {
         void ClearOldNotification();
         IEnumerable<NotificationTask> GetAllNotification(int userId);
+        IEnumerable<NotificationTask> GetNotification(int userId);
         void InsertNotification(int taskId, int userId, string message, string type);
         void UpdateNotificationIsRead(int notificationId);
-        void DeleteNotification(int notificationId);
     }
 }

@@ -1,0 +1,20 @@
+<nav class="breadcrumb" *ngIf="items && items.length > 0">
+  <div class="breadcrumb-item">
+    <a [routerLink]="homeItem.route">
+      <span class="material-icons">home</span>
+      <span>{{ homeItem.label }}</span>
+    </a>
+  </div>
+  <span class="breadcrumb-separator">/</span>
+  <div 
+    class="breadcrumb-item" 
+    *ngFor="let item of items; let last = last"
+    [class.active]="last">
+    <a *ngIf="!last && item.route" [routerLink]="item.route">
+      {{ item.label }}
+    </a>
+    <span *ngIf="last || !item.route">{{ item.label }}</span>
+    <span class="breadcrumb-separator" *ngIf="!last">/</span>
+  </div>
+</nav>
+

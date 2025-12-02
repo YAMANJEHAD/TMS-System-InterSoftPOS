@@ -1,0 +1,117 @@
+<div class="settings-container">
+  <!-- Loader -->
+  <app-loader 
+    [isLoading]="isLoading" 
+    [overlay]="true"
+    message="Processing...">
+  </app-loader>
+
+  <app-breadcrumb [items]="[{ label: 'Settings' }]"></app-breadcrumb>
+  
+  <div class="page-header">
+    <h1>Settings</h1>
+  </div>
+
+  <div class="error-message" *ngIf="errorMessage">
+    <span class="material-icons">error</span>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <div class="success-message" *ngIf="successMessage">
+    <span class="material-icons">check_circle</span>
+    <span>{{ successMessage }}</span>
+  </div>
+
+  <div class="settings-content">
+    <!-- Profile Settings -->
+    <div class="card">
+      <h2>Profile Settings</h2>
+      <form (ngSubmit)="updateProfile()">
+        <div class="form-group">
+          <label>Name *</label>
+          <input type="text" [(ngModel)]="profileForm.name" name="name" required />
+        </div>
+
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="number" [(ngModel)]="profileForm.phone" name="phone" />
+        </div>
+
+        <div class="form-group">
+          <label>Avatar Color</label>
+          <input type="color" [(ngModel)]="profileForm.avatar_color" name="avatar_color" />
+        </div>
+
+        <div class="form-group">
+          <label>Theme</label>
+          <select [(ngModel)]="profileForm.theme" name="theme" (change)="onThemeChange()">
+            <option value="system">System</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="primary-button" [disabled]="isLoading">
+            {{ isLoading ? 'Updating...' : 'Update Profile' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Password Reset -->
+    <div class="card">
+      <h2>Password Settings</h2>
+      <button class="secondary-button" (click)="showPasswordForm = !showPasswordForm">
+        {{ showPasswordForm ? 'Cancel' : 'Change Password' }}
+      </button>
+
+      <form *ngIf="showPasswordForm" (ngSubmit)="resetPassword()">
+        <div class="form-group">
+          <label>New Password *</label>
+          <div class="password-input-wrapper">
+            <input 
+              [type]="showNewPassword ? 'text' : 'password'" 
+              [(ngModel)]="passwordForm.newPassword" 
+              name="newPassword" 
+              required 
+            />
+            <span 
+              class="material-icons password-toggle" 
+              (click)="toggleNewPasswordVisibility()"
+              [title]="showNewPassword ? 'Hide password' : 'Show password'"
+            >
+              {{ showNewPassword ? 'visibility' : 'visibility_off' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Confirm New Password *</label>
+          <div class="password-input-wrapper">
+            <input 
+              [type]="showConfirmPassword ? 'text' : 'password'" 
+              [(ngModel)]="passwordForm.confirmPassword" 
+              name="confirmPassword" 
+              required 
+            />
+            <span 
+              class="material-icons password-toggle" 
+              (click)="toggleConfirmPasswordVisibility()"
+              [title]="showConfirmPassword ? 'Hide password' : 'Show password'"
+            >
+              {{ showConfirmPassword ? 'visibility' : 'visibility_off' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="primary-button" [disabled]="isLoading">
+            {{ isLoading ? 'Resetting...' : 'Reset Password' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+

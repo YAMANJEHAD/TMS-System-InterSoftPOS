@@ -1,0 +1,106 @@
+<div class="reports-container">
+  <app-breadcrumb [items]="[{ label: 'Reports' }]"></app-breadcrumb>
+  <h1>Reports</h1>
+
+  <!-- Filters -->
+  <div class="filters-card card">
+    <h2>Filters</h2>
+    <div class="filters-grid">
+      <div class="form-group">
+        <label>Start Date</label>
+        <input type="date" [(ngModel)]="startDate" />
+      </div>
+      <div class="form-group">
+        <label>End Date</label>
+        <input type="date" [(ngModel)]="endDate" />
+      </div>
+    </div>
+    <div class="filter-actions">
+      <button class="primary-button" (click)="applyFilters()">
+        <span class="material-icons">filter_list</span>
+        <span>Apply Filters</span>
+      </button>
+      <button class="secondary-button" (click)="resetFilters()">
+        <span class="material-icons">refresh</span>
+        <span>Reset</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">Loading reports...</div>
+
+  <div *ngIf="reportsData && !isLoading">
+    <!-- Projects Reports -->
+    <div class="card">
+      <h2>Projects Overview</h2>
+      <div class="chart-container" *ngIf="projectsChartData.labels && projectsChartData.labels.length > 0">
+        <canvas baseChart
+          [data]="projectsChartData"
+          [options]="projectsChartOptions"
+          type="bar">
+        </canvas>
+      </div>
+      <div class="no-data" *ngIf="!projectsChartData.labels || projectsChartData.labels.length === 0">
+        No project data available
+      </div>
+      <table *ngIf="reportsData.projects && reportsData.projects.length > 0">
+        <thead>
+          <tr>
+            <th>Project Name</th>
+            <th>Total Tasks</th>
+            <th>Completed</th>
+            <th>On Hold</th>
+            <th>Under Process</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let project of reportsData.projects">
+            <td>{{ project.projectName }}</td>
+            <td>{{ project.totalTasks }}</td>
+            <td>{{ project.completedTasks }}</td>
+            <td>{{ project.onHoldTasks }}</td>
+            <td>{{ project.underProcessTasks }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Users Performance -->
+    <div class="card">
+      <h2>Users Performance</h2>
+      <div class="chart-container" *ngIf="usersChartData.labels && usersChartData.labels.length > 0">
+        <canvas baseChart
+          [data]="usersChartData"
+          [options]="usersChartOptions"
+          type="bar">
+        </canvas>
+      </div>
+      <div class="no-data" *ngIf="!usersChartData.labels || usersChartData.labels.length === 0">
+        No user performance data available
+      </div>
+      <table *ngIf="reportsData.users && reportsData.users.length > 0">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Inventory Count</th>
+            <th>Transfer Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of reportsData.users">
+            <td>
+              <div class="user-cell">
+                <div class="user-avatar" [style.background-color]="getUserAvatarColor(user.userId)">
+                  {{ getUserInitials(user.userId) }}
+                </div>
+                <span class="user-name">{{ getUserName(user.userId) }}</span>
+              </div>
+            </td>
+            <td>{{ user.inventoryCount }}</td>
+            <td>{{ user.transferCount }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

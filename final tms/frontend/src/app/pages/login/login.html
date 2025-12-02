@@ -1,0 +1,72 @@
+<div class="login-page login-container">
+  <div class="login-wrapper">
+    <!-- Left Side: Image -->
+    <div class="login-image-section">
+      <img src="/Images/login_img.png" alt="Login Illustration" class="login-image" />
+    </div>
+
+    <!-- Right Side: Login Form -->
+    <div class="login-form-section">
+      <div class="login-card">
+        <!-- Header with Logo and Branding -->
+        <div class="login-top-header">
+          <div class="logo-container">
+            <img src="/Images/logo.jpg" alt="INTERSOFT Logo" class="company-logo" />
+          </div>
+          <div class="branding-text-left">
+            <h2 class="product-name">INTERSOFT TMS</h2>
+            <p class="tagline">International Software Co.</p>
+          </div>
+        </div>
+
+        <!-- Login Form -->
+        <form (ngSubmit)="onSubmit()" class="login-form">
+          <div class="form-group">
+            <label for="email">Email Address<span class="required">*</span></label>
+            <input
+              type="email"
+              id="email"
+              [(ngModel)]="email"
+              name="email"
+              placeholder="Enter your email address"
+              required
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password<span class="required">*</span></label>
+            <div class="password-input-wrapper">
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                id="password"
+                [(ngModel)]="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+                [disabled]="isLoading"
+              />
+              <span 
+                class="material-icons password-toggle" 
+                (click)="togglePasswordVisibility()"
+                [title]="showPassword ? 'Hide password' : 'Show password'"
+              >
+                {{ showPassword ? 'visibility' : 'visibility_off' }}
+              </span>
+            </div>
+          </div>
+
+          <div class="error-message" *ngIf="errorMessage">
+            <span class="material-icons">error</span>
+            <span>{{ errorMessage }}</span>
+          </div>
+
+          <button type="submit" class="login-btn" [disabled]="isLoading">
+            <span *ngIf="!isLoading">Log In</span>
+            <span *ngIf="isLoading">Logging in...</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

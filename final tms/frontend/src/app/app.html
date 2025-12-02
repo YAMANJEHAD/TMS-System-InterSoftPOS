@@ -1,1 +1,8 @@
-<router-outlet></router-outlet>
+<div class="app-container">
+  <app-sidebar *ngIf="isLoggedIn() && !isLoginPage()"></app-sidebar>
+  <app-header *ngIf="isLoggedIn() && !isLoginPage()"></app-header>
+  <main class="main-content" [class.with-sidebar]="isLoggedIn() && !isLoginPage()">
+    <router-outlet />
+  </main>
+  <app-toast></app-toast>
+</div>

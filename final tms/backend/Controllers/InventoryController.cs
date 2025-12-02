@@ -49,11 +49,11 @@ namespace Backend.Controllers
         }
 
         [HttpGet("status/{statusId}")]
-        public IActionResult GetByStatus(int statusId)
+        public IActionResult GetByStatus(int statusId, int PageNumber = 1, int PageSize = 10)
         {
             if (!HasPermission("GetByStatus")) return Unauthorized();
             LogAction("GetByStatus", "inventory", statusId);
-            return Ok(_svc.GetInventoryByStatus(statusId));
+            return Ok(_svc.GetInventoryByStatus(statusId, PageNumber, PageSize));
         }
 
         [HttpPost]

@@ -1,0 +1,74 @@
+<div class="inventory-report-container">
+  <app-breadcrumb [items]="[{ label: 'Inventory Report' }]"></app-breadcrumb>
+  <h1>Inventory Report</h1>
+
+  <div class="loading" *ngIf="isLoading">Loading report data...</div>
+
+  <div *ngIf="!isLoading" class="charts-container">
+    <!-- Top Section: Two Charts Side by Side -->
+    <div class="top-charts-grid">
+      <!-- Inventory by Reason - Donut Chart -->
+    <div class="card">
+        <h2>Inventory by Reason</h2>
+      <div class="chart-container">
+        <canvas baseChart
+            [data]="reasonChartData"
+            [options]="reasonChartOptions"
+            type="doughnut">
+        </canvas>
+      </div>
+        <div class="no-data" *ngIf="reasonChartData.labels?.length === 0">
+          No reason data available
+      </div>
+    </div>
+
+    <!-- Inventory by User - Bar Chart -->
+    <div class="card">
+      <h2>Inventory by User</h2>
+      <div class="chart-container">
+        <canvas baseChart
+          [data]="userChartData"
+          [options]="userChartOptions"
+          type="bar">
+        </canvas>
+      </div>
+      <div class="no-data" *ngIf="userChartData.labels?.length === 0">
+        No user data available
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Section: Two Charts Stacked Vertically -->
+    <div class="bottom-charts-grid">
+    <!-- Inventory by Technician - Vertical Bar Chart -->
+    <div class="card">
+      <h2>Inventory by Technician</h2>
+      <div class="chart-container">
+        <canvas baseChart
+          [data]="techChartData"
+          [options]="techChartOptions"
+          type="bar">
+        </canvas>
+      </div>
+      <div class="no-data" *ngIf="techChartData.labels?.length === 0">
+        No technician data available
+      </div>
+    </div>
+
+      <!-- Daily Inventory Entries - Line Chart -->
+    <div class="card">
+        <h2>Daily Inventory Entries</h2>
+      <div class="chart-container">
+        <canvas baseChart
+            [data]="dailyChartData"
+            [options]="dailyChartOptions"
+            type="line">
+        </canvas>
+      </div>
+        <div class="no-data" *ngIf="dailyChartData.labels?.length === 0">
+          No daily data available
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

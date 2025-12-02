@@ -1,0 +1,139 @@
+@use '../../../styles.scss' as *;
+
+.settings-container {
+  padding: 24px;
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+
+    .btn-back {
+      background: var(--navy-blue);
+      color: var(--text-inverse);
+      border: none;
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: background var(--transition-normal);
+
+      &:hover {
+        background: var(--navy-blue-hover);
+      }
+    }
+
+    h1 {
+      color: var(--text-primary);
+      margin: 0;
+    }
+  }
+
+  .settings-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    .card {
+      background: var(--bg-primary);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+      transition: background-color var(--transition-slow);
+
+      h2 {
+        color: var(--text-primary);
+        margin-bottom: 24px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+
+        label {
+          display: block;
+          margin-bottom: 8px;
+          font-weight: 600;
+          color: var(--text-primary);
+        }
+
+        .password-input-wrapper {
+          position: relative;
+
+          input {
+            padding-right: 45px;
+          }
+
+          .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+            cursor: pointer;
+            font-size: 20px;
+            user-select: none;
+            transition: color var(--transition-normal);
+
+            &:hover {
+              color: var(--text-secondary);
+            }
+          }
+        }
+
+        input,
+        select,
+        textarea {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid var(--border-color);
+          border-radius: var(--radius-md);
+          font-size: 14px;
+          background: var(--bg-primary);
+          color: var(--text-primary);
+          transition: border-color var(--transition-normal);
+
+          &:focus {
+            outline: none;
+            border-color: var(--navy-blue);
+            box-shadow: 0 0 0 3px var(--navy-blue-light);
+          }
+        }
+
+        input[type="color"] {
+          width: 100px;
+          height: 40px;
+          padding: 2px;
+        }
+      }
+
+      .form-actions {
+        margin-top: 24px;
+      }
+    }
+  }
+
+  .error-message {
+    background: var(--error-red-light);
+    color: var(--error-red);
+    padding: 12px;
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--error-red);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+
+  .success-message {
+    background: var(--success-green-light);
+    color: var(--success-green);
+    padding: 12px;
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--success-green);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+}
+

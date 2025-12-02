@@ -1,0 +1,110 @@
+@use '../reports/reports.scss' as *;
+
+.inventory-report-container {
+  @extend .reports-container;
+
+  .charts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  // Top Section: Two Charts Side by Side
+  .top-charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+
+    @media (max-width: 1200px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // Bottom Section: Two Charts Stacked Vertically
+  .bottom-charts-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .card {
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    transition: background-color var(--transition-slow);
+
+    h2 {
+      margin: 0 0 20px 0;
+      color: var(--text-primary);
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .chart-container {
+      height: 400px;
+      position: relative;
+      flex: 1;
+      min-height: 400px;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-secondary);
+      font-style: italic;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary);
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .top-charts-grid {
+      gap: 16px;
+    }
+
+    .bottom-charts-grid {
+      gap: 16px;
+    }
+
+    .card {
+      padding: 20px;
+      min-height: 450px;
+
+      .chart-container {
+        height: 350px;
+        min-height: 350px;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .card {
+      padding: 16px;
+      min-height: 400px;
+
+      h2 {
+        font-size: 16px;
+        margin-bottom: 16px;
+      }
+
+      .chart-container {
+        height: 300px;
+        min-height: 300px;
+      }
+    }
+  }
+}
+

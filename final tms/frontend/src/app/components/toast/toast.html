@@ -1,0 +1,17 @@
+<div class="toast-container">
+  <div 
+    *ngFor="let message of messages" 
+    class="toast" 
+    [class]="'toast-' + message.type">
+    <span class="material-icons icon">
+      {{ message.type === 'success' ? 'check_circle' : 
+         message.type === 'error' ? 'error' : 
+         message.type === 'warning' ? 'warning' : 'info' }}
+    </span>
+    <span class="message">{{ message.message }}</span>
+    <button class="close-btn" (click)="remove(message.id); $event.stopPropagation()" aria-label="Close">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+</div>
+

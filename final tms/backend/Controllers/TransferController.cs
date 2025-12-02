@@ -41,10 +41,10 @@ namespace Backend.Controllers
         [HttpGet]
         public IActionResult GetAll([FromQuery] DateTime? fromDate, [FromQuery] DateTime? toDate,
                                     [FromQuery] int? ticketNo, [FromQuery] int? duplicateCount,
-                                    [FromQuery] int? terminalNumber, [FromQuery] int? userId)
+                                    [FromQuery] int? terminalNumber, [FromQuery] int? userId, [FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 10)
         {
             if (!HasPermission("GetTransferTickets")) return Unauthorized();
-            var list = _svc.GetAllTransferTicket(fromDate, toDate, ticketNo, duplicateCount, terminalNumber, userId);
+            var list = _svc.GetAllTransferTicket(fromDate, toDate, ticketNo, duplicateCount, terminalNumber, userId, PageNumber, PageSize);
             LogAction("GetTransferTickets", "transfertickets", new { fromDate, toDate, ticketNo, duplicateCount, terminalNumber, userId });
             return Ok(list);
         }

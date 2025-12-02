@@ -1,0 +1,111 @@
+<div class="transfer-reports-container">
+  <app-breadcrumb [items]="[{ label: 'Transfer Reports' }]"></app-breadcrumb>
+  <h1>Transfer Reports</h1>
+
+  <div class="loading" *ngIf="isLoading">Loading reports...</div>
+
+  <div *ngIf="chartData && !isLoading">
+    <!-- Charts Section -->
+    <div class="charts-grid">
+      <div class="card">
+        <h2>Total Transfers by User</h2>
+        <div class="chart-container">
+          <canvas baseChart
+            [data]="userChartData"
+            [options]="userChartOptions"
+            type="bar">
+          </canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Total Transfers by Day</h2>
+        <div class="chart-container">
+          <canvas baseChart
+            [data]="dayChartData"
+            [options]="dayChartOptions"
+            type="line">
+          </canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tables Section -->
+    <div class="tables-grid">
+      <div class="card">
+        <h2>Total Transfers by User</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Total Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of chartData.data.byUserTotal">
+              <td>
+                <div class="user-cell">
+                  <div class="user-avatar" [style.background-color]="getUserAvatarColor(item.user_Id)">
+                    {{ getUserInitials(item.user_Id) }}
+                  </div>
+                  <span class="user-name">{{ getUserName(item.user_Id) }}</span>
+                </div>
+              </td>
+              <td>{{ item.count }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>Daily Transfers by User</h2>
+        <div class="date-controls">
+          <button class="btn-nav" (click)="goToPreviousDay()" type="button">
+            <span class="material-icons">chevron_left</span>
+            Previous Day
+          </button>
+          <input 
+            type="date" 
+            [(ngModel)]="selectedDate" 
+            (change)="onDateChange()"
+            [max]="maxDate"
+            class="date-picker" />
+          <button 
+            class="btn-nav" 
+            (click)="goToNextDay()" 
+            type="button"
+            [disabled]="isToday(selectedDate)">
+            Next Day
+            <span class="material-icons">chevron_right</span>
+          </button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>User</th>
+              <th>Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of filteredDailyTransfers">
+              <td>{{ item.day | date:'shortDate' }}</td>
+              <td>
+                <div class="user-cell">
+                  <div class="user-avatar" [style.background-color]="getUserAvatarColor(item.user_Id)">
+                    {{ getUserInitials(item.user_Id) }}
+                  </div>
+                  <span class="user-name">{{ getUserName(item.user_Id) }}</span>
+                </div>
+              </td>
+              <td>{{ item.count }}</td>
+            </tr>
+            <tr *ngIf="filteredDailyTransfers.length === 0">
+              <td colspan="3" class="no-data">No transfers found for this date</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

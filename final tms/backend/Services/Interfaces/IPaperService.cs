@@ -6,7 +6,7 @@ namespace Backend.Services.Interfaces
 {
     public interface IPaperService
     {
-        IEnumerable<CancelledPaperDto> GetPaper(DateTime? fromDate, DateTime? toDate, int? entryUser);
+        IEnumerable<CancelledPaperDto> GetPaper(DateTime? fromDate, DateTime? toDate, int? entryUser, int PageNumber, int PageSize);
         void InsertPaper(CancelledPaperCreateDto dto, int EntryUser);
         void UpdatePaper(CancelledPaperUpdateDto dto);
         void DeletePaper(int id);

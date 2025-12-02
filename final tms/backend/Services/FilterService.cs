@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Security;
 using Backend.Models;
 using Backend.Services.Interfaces;
 
@@ -27,6 +28,29 @@ namespace Backend.Services
                 {
                     PriorityId = (int)rdr["priority_id"],
                     PriorityName = rdr["priority_name"].ToString()
+                });
+            }
+            return list;
+        }
+
+        public IEnumerable<PermissionsDto> GetAllPermissions(int userId)
+        {
+            var list = new List<PermissionsDto>();
+            using var conn = _dbClient.CreateConnection();
+            using var cmd = new SqlCommand("GetAllPermissions", (SqlConnection)conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.AddWithValue("@userId", userId);
+            conn.Open();
+            using var rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                list.Add(new PermissionsDto
+                {
+                    PermissionsId = (int)rdr["Id"],
+                    PermissionsName = rdr["Name"].ToString(),
+                    HasPermission = Convert.ToBoolean(rdr["HasPermission"])
                 });
             }
             return list;
@@ -79,6 +103,27 @@ namespace Backend.Services
             var list = new List<StatusDto>();
             using var conn = _dbClient.CreateConnection();
             using var cmd = new SqlCommand("GetStatusForFilter", (SqlConnection)conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            conn.Open();
+            using var rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                list.Add(new StatusDto
+                {
+                    StatusId = (int)rdr["status_id"],
+                    StatusName = rdr["status_name"].ToString()
+                });
+            }
+            return list;
+        }
+
+        public IEnumerable<StatusDto> GetInventoryStatusForFilter()
+        {
+            var list = new List<StatusDto>();
+            using var conn = _dbClient.CreateConnection();
+            using var cmd = new SqlCommand("GetInventoryStatusForFilter", (SqlConnection)conn)
             {
                 CommandType = CommandType.StoredProcedure
             };

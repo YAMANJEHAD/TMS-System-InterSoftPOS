@@ -43,6 +43,14 @@ namespace Backend.Controllers
             LogAction("GetPriorities", "filters", result);
             return Ok(result);
         }
+        [HttpGet("permissions")]
+        public IActionResult GetAllPermissions(int userId)
+        {
+            if (!HasPermission("GetAllPermissions")) return Unauthorized();
+            var result = _svc.GetAllPermissions(userId);
+            LogAction("GetAllPermissions", "filters", result);
+            return Ok(result);
+        }
 
         [HttpGet("projects")]
         public IActionResult GetProjects()
@@ -68,6 +76,15 @@ namespace Backend.Controllers
             if (!HasPermission("GetFilters")) return Unauthorized();
             var result = _svc.GetStatusForFilter();
             LogAction("GetStatuses", "filters", result);
+            return Ok(result);
+        }
+
+        [HttpGet("GetInventoryStatus")]
+        public IActionResult GetInventoryStatus()
+        {
+            if (!HasPermission("GetFilters")) return Unauthorized();
+            var result = _svc.GetInventoryStatusForFilter();
+            LogAction("GetInventoryStatus", "filters", result);
             return Ok(result);
         }
 

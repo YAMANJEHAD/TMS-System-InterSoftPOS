@@ -21,13 +21,14 @@ namespace Backend.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public IEnumerable<TransferTicketDto> GetAllTransferTicket(DateTime? fromDate, DateTime? toDate, int? ticketNo, int? duplicateCount, int? terminalNumber, int? userId)
+        public IEnumerable<TransferTicketDto> GetAllTransferTicket(DateTime? fromDate, DateTime? toDate, int? ticketNo, int? duplicateCount, int? terminalNumber, int? userId, int PageNumber, int PageSize)
         {
             var list = new List<TransferTicketDto>();
             using var conn = _dbClient.CreateConnection();
             using var cmd = new SqlCommand("GetAllTransferTicket", (SqlConnection)conn)
             {
                 CommandType = CommandType.StoredProcedure
+
             };
             cmd.Parameters.AddWithValue("@fromDate", (object)fromDate ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@toDate", (object)toDate ?? DBNull.Value);
@@ -35,6 +36,10 @@ namespace Backend.Services
             cmd.Parameters.AddWithValue("@DuplicateCount", (object)duplicateCount ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@terminal_number", (object)terminalNumber ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@user_id", (object)userId ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@PageNumber", PageNumber);
+            cmd.Parameters.AddWithValue("@PageSize", PageSize);
+            cmd.CommandTimeout = 180;
+
             conn.Open();
             using var rdr = cmd.ExecuteReader();
             while (rdr.Read())
@@ -51,6 +56,8 @@ namespace Backend.Services
                     ToTech = rdr["to_tech"].ToString(),
                     StatusName = rdr["status_name"].ToString(),
                     DuplicateCount = (int)rdr["DuplicateCount"]
+                    
+
                 });
             }
             return list;

@@ -1,0 +1,213 @@
+<div class="task-details-container">
+  <app-breadcrumb [items]="[{ label: 'Tasks', route: '/all-tasks' }, { label: 'Task Details' }]"></app-breadcrumb>
+
+  <div class="page-header">
+    <div class="header-content">
+      <button class="btn-back" (click)="goBack()">
+        <span class="material-icons">arrow_back</span>
+        <span>Back</span>
+      </button>
+    <h1>Task Details</h1>
+      <button 
+        class="btn-edit" 
+        (click)="openEditModal()" 
+        *ngIf="sessionService.hasPermission('UpdateTask') && task">
+        <span class="material-icons">edit</span>
+        <span>Edit Task</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="error-message" *ngIf="errorMessage">
+    <span class="material-icons">error_outline</span>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <div class="loading" *ngIf="isLoading && !task">
+    <span class="material-icons">hourglass_empty</span>
+    <span>Loading task details...</span>
+  </div>
+
+  <div class="task-content" *ngIf="task">
+    <!-- Main Task Information Card -->
+    <div class="card main-card">
+      <div class="card-header">
+        <h2>{{ task.title }}</h2>
+        <div class="task-badges">
+          <span [class]="'status-badge ' + getStatusClass(task.statusName)">
+            {{ task.statusName }}
+          </span>
+          <span [class]="'priority-badge ' + getPriorityClass(task.priorityName)">
+            {{ task.priorityName }}
+          </span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="info-grid">
+          <div class="info-section">
+            <h3 class="section-title">Basic Information</h3>
+        <div class="info-row">
+              <span class="label">Task ID</span>
+              <span class="value">#{{ task.taskId }}</span>
+        </div>
+        <div class="info-row">
+              <span class="label">Project</span>
+              <span class="value">{{ task.projectName }}</span>
+        </div>
+        <div class="info-row">
+              <span class="label">Due Date</span>
+              <span class="value">{{ task.dueDate | date:'mediumDate' }}</span>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <h3 class="section-title">Description</h3>
+            <div class="description-content">
+              <p *ngIf="task.description">{{ task.description }}</p>
+              <p class="no-description" *ngIf="!task.description">No description provided</p>
+            </div>
+          </div>
+
+          <div class="info-section" *ngIf="existingFileName">
+            <h3 class="section-title">Attachments</h3>
+            <div class="file-attachment">
+              <a (click)="downloadFile(); $event.preventDefault()" class="file-link" href="javascript:void(0)">
+                <span class="material-icons">attach_file</span>
+                <span>{{ existingFileName }}</span>
+                <span class="material-icons">download</span>
+              </a>
+            </div>
+        </div>
+        </div>
+        </div>
+        </div>
+
+    <!-- Metadata Card -->
+    <div class="card metadata-card">
+      <div class="card-header">
+        <h3>Task Metadata</h3>
+        </div>
+      <div class="card-body">
+        <div class="metadata-grid">
+          <div class="metadata-item">
+            <span class="metadata-label">
+              <span class="material-icons">person</span>
+              Created By
+            </span>
+            <span class="metadata-value">{{ task.entryUser }}</span>
+        </div>
+          <div class="metadata-item">
+            <span class="metadata-label">
+              <span class="material-icons">assignment_ind</span>
+              Assigned By
+            </span>
+            <span class="metadata-value">{{ task.assignBy }}</span>
+        </div>
+          <div class="metadata-item">
+            <span class="metadata-label">
+              <span class="material-icons">schedule</span>
+              Created At
+            </span>
+            <span class="metadata-value">{{ task.createdAt | date:'medium' }}</span>
+        </div>
+          <div class="metadata-item" *ngIf="task.updatedAt">
+            <span class="metadata-label">
+              <span class="material-icons">update</span>
+              Updated At
+          </span>
+            <span class="metadata-value">{{ task.updatedAt | date:'medium' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Task Modal -->
+  <div class="modal" *ngIf="showEditModal" (click)="closeEditModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+      <h2>Edit Task</h2>
+        <button class="close-btn" (click)="closeEditModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="error-message" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+        
+      <form (ngSubmit)="updateTask()">
+        <div class="form-group">
+          <label>Title *</label>
+            <input type="text" [(ngModel)]="title" name="title" required placeholder="Enter task title" />
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+            <textarea [(ngModel)]="description" name="description" rows="4" placeholder="Enter task description"></textarea>
+        </div>
+
+          <div class="form-row">
+        <div class="form-group">
+          <label>Due Date *</label>
+          <input type="date" [(ngModel)]="dueDate" name="dueDate" required />
+        </div>
+
+        <div class="form-group">
+          <label>Status</label>
+          <select [(ngModel)]="statusId" name="statusId">
+                <option [value]="0">Select Status</option>
+            <option *ngFor="let status of statuses" [value]="status.statusId">
+              {{ status.statusName }}
+            </option>
+          </select>
+            </div>
+        </div>
+
+          <div class="form-row">
+        <div class="form-group">
+          <label>Priority</label>
+          <select [(ngModel)]="priorityId" name="priorityId">
+                <option [value]="0">Select Priority</option>
+            <option *ngFor="let priority of priorities" [value]="priority.priorityId">
+              {{ priority.priorityName }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Project</label>
+          <select [(ngModel)]="projectId" name="projectId">
+                <option [value]="0">Select Project</option>
+            <option *ngFor="let project of projects" [value]="project.projectId">
+              {{ project.name }}
+            </option>
+          </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+          <label>Upload File</label>
+            <div class="file-upload-wrapper">
+              <input type="file" (change)="onFileSelected($event)" id="file-input" />
+              <label for="file-input" class="file-upload-label">
+                <span class="material-icons">cloud_upload</span>
+                <span>{{ fileName || 'Choose file or drag it here' }}</span>
+              </label>
+            </div>
+            <small *ngIf="existingFileName" class="existing-file">
+              Current file: {{ existingFileName }}
+            </small>
+          </div>
+        </form>
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="secondary-button" (click)="closeEditModal()">Cancel</button>
+        <button type="button" class="primary-button" (click)="updateTask()" [disabled]="isLoading">
+          <span *ngIf="!isLoading">Update Task</span>
+          <span *ngIf="isLoading">Updating...</span>
+          </button>
+        </div>
+    </div>
+  </div>
+</div>
+
